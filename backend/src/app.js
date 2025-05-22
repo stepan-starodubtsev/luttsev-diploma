@@ -8,18 +8,18 @@ const path = require('path');
 // Middleware
 const authMiddleware = require('./middleware/authMiddleware');
 const roleMiddleware = require('./middleware/roleMiddleware');
-const {ROLES} = require('./config/constants');
+const { ROLES } = require('./config/constants');
 
 // Routers
 const authRouter = require('./routes/authRouter');
-const maintenanceRouter = require('./routes/exerciseRouter');
-const repairComponentRouter = require('./routes/militaryPersonnelRouter');
-const repairRouter = require('./routes/sessionExerciseRouter');
 const userRouter = require('./routes/userRouter');
 const unitRouter = require('./routes/unitRouter');
-const vehicleRouter = require('./routes/trainingSessionRouter');
-const mileageLogRouter = require('./routes/locationRouter');
-const vehicleComponentRouter = require('./routes/standardAssessmentRouter');
+const militaryPersonnelRouter = require('./routes/militaryPersonnelRouter');
+const exerciseRouter = require('./routes/exerciseRouter');
+const locationRouter = require('./routes/locationRouter');
+const trainingSessionRouter = require('./routes/trainingSessionRouter');
+const sessionExerciseRouter = require('./routes/sessionExerciseRouter');
+const standardAssessmentRouter = require('./routes/standardAssessmentRouter');
 
 app.use(express.json());
 
@@ -29,6 +29,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Swagger
 const swaggerDocument = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'swagger.json'), 'utf8'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -40,86 +41,74 @@ app.use(authMiddleware);
 
 // --- Role-Based Access ---
 
-
-// 1. /api/users
-const adminOnlyUserOperationsPermissions = {
-    [ROLES.ADMIN]: {methods: '*'},
-    [ROLES.COMMANDER]: {methods: 'PUT'},
-    [ROLES.UNIT_COMMANDER]: {methods: 'PUT'},
-    [ROLES.DUTY_STAFF]: {methods: 'PUT'},
+const usersPermissions = {
+    [ROLES.ADMIN]: { methods: '*' }, // Адмін може все
+    [ROLES.DEPARTMENT_EMPLOYEE]: { methods: ['GET', 'PUT'] },
+    [ROLES.COMMANDER]: { methods: ['GET', 'PUT'] },
+    [ROLES.INSTRUCTOR]: { methods: ['GET', 'PUT'] }
 };
+app.use('/api/users', roleMiddleware(usersPermissions), userRouter);
 
-app.use('/api/users',
-    roleMiddleware(adminOnlyUserOperationsPermissions),
-    userRouter
-);
-
-
-// 2. /api/units
-const unitsAccessPermissions = {
-    [ROLES.ADMIN]: {methods: '*'},
-    [ROLES.COMMANDER]: {methods: ['GET']},
-    [ROLES.UNIT_COMMANDER]: {methods: ['GET']},
+const unitsPermissions = {
+    [ROLES.ADMIN]: { methods: '*' },
+    [ROLES.DEPARTMENT_EMPLOYEE]: { methods: ['GET'] },
+    [ROLES.COMMANDER]: { methods: ['GET'] },
+    [ROLES.INSTRUCTOR]: { methods: ['GET'] }
 };
+app.use('/api/units', roleMiddleware(unitsPermissions), unitRouter);
 
-const checkUnitsAccess = (req, res, next) => {
-    const userRole = req.user.user.role;
-    if (userRole !== ROLES.DUTY_STAFF) {
-        return next();
-    }
-    return res.status(403).json({message: `Access Denied: Your role (${userRole}) cannot access ${req.baseUrl}.`});
+const militaryPersonnelPermissions = {
+    [ROLES.ADMIN]: { methods: '*' },
+    [ROLES.DEPARTMENT_EMPLOYEE]: { methods: ['GET'] },
+    [ROLES.COMMANDER]: { methods: ['*'] },
+    [ROLES.INSTRUCTOR]: { methods: ['GET'] }
 };
-app.use('/api/units', checkUnitsAccess, roleMiddleware(unitsAccessPermissions), unitRouter);
+app.use('/api/military-personnel', roleMiddleware(militaryPersonnelPermissions), militaryPersonnelRouter);
 
-
-// 3. /api/mileage-logs
-const mileageLogAccessPermissions = {
-    [ROLES.UNIT_COMMANDER]: {methods: '*'},
-    [ROLES.COMMANDER]: {methods: '*'},
-    [ROLES.DUTY_STAFF]: {methods: '*'}
+const exercisesPermissions = {
+    [ROLES.ADMIN]: { methods: '*' },
+    [ROLES.DEPARTMENT_EMPLOYEE]: { methods: '*' },
+    [ROLES.COMMANDER]: { methods: ['GET'] },
+    [ROLES.INSTRUCTOR]: { methods: ['GET'] }
 };
-const allowNonAdminOnlyForMileageLogs = (req, res, next) => {
-    if (req.user.user.role === ROLES.ADMIN) {
-        return res.status(403).json({message: `Access Denied: ADMIN cannot access ${req.baseUrl}.`});
-    }
-    next();
+app.use('/api/exercises', roleMiddleware(exercisesPermissions), exerciseRouter);
+
+const locationsPermissions = {
+    [ROLES.ADMIN]: { methods: '*' },
+    [ROLES.DEPARTMENT_EMPLOYEE]: { methods: '*' },
+    [ROLES.COMMANDER]: { methods: ['GET'] },
+    [ROLES.INSTRUCTOR]: { methods: ['GET'] }
 };
-app.use('/api/mileage-logs',
-    allowNonAdminOnlyForMileageLogs,
-    roleMiddleware(mileageLogAccessPermissions),
-    mileageLogRouter
-);
+app.use('/api/locations', roleMiddleware(locationsPermissions), locationRouter);
 
-// 4. COMMANDER & UNIT_COMMANDER
-const generalPermissions = {
-    [ROLES.COMMANDER]: {
-        methods: ['GET'],
-        forbiddenRoutes: ['/api/users', '/api/units']
-    },
-    [ROLES.UNIT_COMMANDER]: {
-        methods: '*',
-        forbiddenRoutes: ['/api/users', '/api/units']
-    }
+const trainingSessionsPermissions = {
+    [ROLES.ADMIN]: { methods: '*' },
+    [ROLES.DEPARTMENT_EMPLOYEE]: { methods: '*' },
+    [ROLES.COMMANDER]: { methods: ['*'] },
+    [ROLES.INSTRUCTOR]: { methods: ['GET', 'PUT'] }
 };
+app.use('/api/training-sessions', roleMiddleware(trainingSessionsPermissions), trainingSessionRouter);
 
-const generalRoutes = [
-    '/api/maintenance',
-    '/api/repair-components',
-    '/api/repairs',
-    '/api/vehicles',
-    '/api/vehicle-components'
-];
-
-app.use(generalRoutes, roleMiddleware(generalPermissions));
-
-app.use('/api/maintenance', maintenanceRouter);
-app.use('/api/repair-components', repairComponentRouter);
-app.use('/api/repairs', repairRouter);
-app.use('/api/vehicles', vehicleRouter);
-app.use('/api/vehicle-components', vehicleComponentRouter);
+const sessionExercisesPermissions = {
+    [ROLES.ADMIN]: { methods: '*' },
+    [ROLES.DEPARTMENT_EMPLOYEE]: { methods: '*' },
+    [ROLES.COMMANDER]: { methods: '*' },
+    [ROLES.INSTRUCTOR]: { methods: '*' }
+};
+app.use('/api/session-exercises', roleMiddleware(sessionExercisesPermissions), sessionExerciseRouter);
 
 
-app.get('/api', (req, res) => res.send('API is running... (Authenticated)'));
+const standardAssessmentsPermissions = {
+    [ROLES.ADMIN]: { methods: '*' },
+    [ROLES.DEPARTMENT_EMPLOYEE]: { methods: ['GET'] },
+    [ROLES.COMMANDER]: { methods: '*' },
+    [ROLES.INSTRUCTOR]: { methods: '*' }
+};
+app.use('/api/standard-assessments', roleMiddleware(standardAssessmentsPermissions), standardAssessmentRouter);
+
+
+app.get('/api', (req, res) =>
+    res.send('Physical Training Module API is running... (Authenticated)'));
 
 app.use((error, req, res, next) => {
     console.error("Error Handler:", error.name, error.message, error.stack);
