@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/settingsDB');
 
-const Unit = sequelize.define('Unit', {
+const PtUnit = sequelize.define('PtUnit', {
     unit_id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -21,4 +21,4 @@ const Unit = sequelize.define('Unit', {
     updatedAt: 'updated_at'
 });
 
-module.exports = Unit;
+module.exports = PtUnit;
