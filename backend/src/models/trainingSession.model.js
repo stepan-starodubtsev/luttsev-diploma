@@ -33,10 +33,10 @@ const TrainingSession = sequelize.define('TrainingSession', {
         allowNull: false,
         field: 'conducted_by_user_id'
     },
-    pt_unit_id: {
+    unit_id: {
         type: DataTypes.BIGINT,
         allowNull: true,
-        field: 'pt_unit_id'
+        field: 'unit_id'
     }
 }, {
     tableName: 'training_sessions',

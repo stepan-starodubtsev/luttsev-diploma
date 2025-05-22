@@ -18,35 +18,45 @@ module.exports = {
             throw new AppError('Password is required to create a user', 400);
         }
 
-        const ptUser = await User.create(userData);
-        const userToReturn = {...ptUser.toJSON()};
+        const user = await User.create(userData);
+        const userToReturn = {...user.toJSON()};
         delete userToReturn.password_hash;
         return userToReturn;
     },
 
     async getAllUsers() {
-        const ptUsers = await User.findAll({
+        const users = await User.findAll({
             attributes: {exclude: ['password_hash']}
         });
-        if (!ptUsers || ptUsers.length === 0) {
+        if (!users || users.length === 0) {
             return null;
         }
-        return ptUsers;
+        return users;
     },
 
     async getUserById(id) {
-        const ptUser = await User.findByPk(id, {
+        const user = await User.findByPk(id, {
             attributes: {exclude: ['password_hash']}
         });
-        if (!ptUser) {
+        if (!user) {
             throw new AppError(`User with ID ${id} not found`, 404);
         }
-        return ptUser;
+        return user;
+    },
+
+    async getUserByEmail(email) {
+        const user = await User.findOne({where: {email: email}}, {
+            attributes: {exclude: ['password_hash']}
+        });
+        if (!user) {
+            throw new AppError(`User with email ${email} not found`, 404);
+        }
+        return user;
     },
 
     async updateUser(id, updateData) {
-        const ptUser = await User.findByPk(id);
-        if (!ptUser) {
+        const user = await User.findByPk(id);
+        if (!user) {
             throw new AppError(`User with ID ${id} not found`, 404);
         }
 
@@ -55,15 +65,15 @@ module.exports = {
             delete updateData.password;
         }
 
-        await ptUser.update(updateData);
-        const updatedUserToReturn = {...ptUser.toJSON()};
+        await user.update(updateData);
+        const updatedUserToReturn = {...user.toJSON()};
         delete updatedUserToReturn.password_hash;
         return updatedUserToReturn;
     },
 
     async deleteUser(id) {
-        const ptUser = await User.findByPk(id);
-        if (!ptUser) {
+        const user = await User.findByPk(id);
+        if (!user) {
             throw new AppError(`User with ID ${id} not found`, 404);
         }
 
@@ -74,7 +84,7 @@ module.exports = {
             }
         }
 
-        await ptUser.destroy();
+        await user.destroy();
         return {message: `User with ID ${id} deleted successfully`};
     }
 };

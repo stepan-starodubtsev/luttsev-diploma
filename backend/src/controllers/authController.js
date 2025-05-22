@@ -1,14 +1,14 @@
 const User = require('../models/User.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {userToDto} = require("../dtos/user.dto");
+const {getUserByEmail} = require("../services/UserService");
 require('dotenv').config();
 
 exports.login = async (req, res) => {
-    const {username, password} = req.body;
+    const {email, password} = req.body;
 
     try {
-        const user = await User.findOne({where: {username}});
+        const user = await getUserByEmail(email);
 
         if (!user) {
             return res.status(400).json({message: 'Invalid Credentials'});
@@ -20,7 +20,7 @@ exports.login = async (req, res) => {
             return res.status(400).json({message: 'Invalid Credentials'});
         }
 
-        const payload = {user: userToDto(user)};
+        const payload = {user: user};
 
         jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 36000}, (err, token) => {
             if (err) throw err;
@@ -44,7 +44,7 @@ exports.getMe = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        res.json(userToDto(user));
+        res.json(user);
     } catch (err) {
         console.error("GetMe error:", err.message);
         res.status(500).send('Server error');

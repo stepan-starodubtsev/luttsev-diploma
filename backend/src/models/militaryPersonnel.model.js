@@ -28,10 +28,10 @@ const MilitaryPersonnel = sequelize.define('MilitaryPersonnel', {
         allowNull: false,
         field: 'date_of_birth'
     },
-    pt_unit_id: {
+    unit_id: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        field: 'pt_unit_id'
+        field: 'unit_id'
     }
 }, {
     tableName: 'military_personnel',

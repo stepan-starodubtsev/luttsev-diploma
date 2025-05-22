@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/settingsDB');
 
-const PtUser = sequelize.define('PtUser', {
+const User = sequelize.define('User', {
     user_id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -34,16 +34,16 @@ const PtUser = sequelize.define('PtUser', {
         allowNull: false,
         field: 'role'
     },
-    pt_unit_id: {
+    unit_id: {
         type: DataTypes.BIGINT,
         allowNull: true,
-        field: 'pt_unit_id'
+        field: 'unit_id'
     }
 }, {
-    tableName: 'pt_users',
+    tableName: 'users',
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at'
 });
 
-module.exports = PtUser;
+module.exports = User;

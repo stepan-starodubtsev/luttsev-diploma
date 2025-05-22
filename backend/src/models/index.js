@@ -18,12 +18,12 @@ db.StandardAssessment = require('./standardAssessment.model.js');
 
 
 // User <-> Unit (One-to-Many)
-db.Unit.hasMany(db.User, { foreignKey: { name: 'ptUnitId', field: 'pt_unit_id' }, as: 'ptUsers' });
-db.User.belongsTo(db.Unit, { foreignKey: { name: 'ptUnitId', field: 'pt_unit_id' }, as: 'ptUnit' });
+db.Unit.hasMany(db.User, { foreignKey: { name: 'unitId', field: 'unit_id' }, as: 'users' });
+db.User.belongsTo(db.Unit, { foreignKey: { name: 'unitId', field: 'unit_id' }, as: 'unit' });
 
 // Unit <-> MilitaryPersonnel (One-to-Many)
-db.Unit.hasMany(db.MilitaryPersonnel, { foreignKey: { name: 'ptUnitId', field: 'pt_unit_id' }, as: 'militaryPersonnel' });
-db.MilitaryPersonnel.belongsTo(db.Unit, { foreignKey: { name: 'ptUnitId', field: 'pt_unit_id' }, as: 'ptUnit' });
+db.Unit.hasMany(db.MilitaryPersonnel, { foreignKey: { name: 'unitId', field: 'unit_id' }, as: 'militaryPersonnel' });
+db.MilitaryPersonnel.belongsTo(db.Unit, { foreignKey: { name: 'unitId', field: 'unit_id' }, as: 'unit' });
 
 // User (Conductor) <-> TrainingSession (One-to-Many)
 db.User.hasMany(db.TrainingSession, { foreignKey: { name: 'conductedByUserId', field: 'conducted_by_user_id' }, as: 'conductedTrainingSessions' });
@@ -34,8 +34,8 @@ db.Location.hasMany(db.TrainingSession, { foreignKey: { name: 'locationId', fiel
 db.TrainingSession.belongsTo(db.Location, { foreignKey: { name: 'locationId', field: 'location_id' }, as: 'location' });
 
 // Unit <-> TrainingSession (One-to-Many)
-db.Unit.hasMany(db.TrainingSession, { foreignKey: { name: 'ptUnitId', field: 'pt_unit_id' }, as: 'trainingSessions' });
-db.TrainingSession.belongsTo(db.Unit, { foreignKey: { name: 'ptUnitId', field: 'pt_unit_id' }, as: 'ptUnit' });
+db.Unit.hasMany(db.TrainingSession, { foreignKey: { name: 'unitId', field: 'unit_id' }, as: 'trainingSessions' });
+db.TrainingSession.belongsTo(db.Unit, { foreignKey: { name: 'unitId', field: 'unit_id' }, as: 'unit' });
 
 // TrainingSession <-> Exercise (Many-to-Many through SessionExercise)
 db.TrainingSession.belongsToMany(db.Exercise, {
