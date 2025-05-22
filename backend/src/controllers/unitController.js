@@ -1,43 +1,32 @@
-const {unitToDto} = require("../dtos/unit.dto");
-const {
-    getAllUnits,
-    getUnitById,
-    createUnit,
-    updateUnit,
-    deleteUnit
-} = require("../services/UnitService");
+const unitService = require('../services/unitService');
+const AppError = require('../errors/AppError');
 
 module.exports = {
     async getAll(req, res) {
-        const units = await getAllUnits();
+        const units = await unitService.getAllUnits();
         if (!units) {
-            res.status(404).send({});
-        } else {
-            res.json(units.map(unit => unitToDto(unit)));
+            return res.json([]);
         }
+        res.json(units);
     },
 
     async getById(req, res) {
-        const unitDTO = await getUnitById(req.params.id);
-        if (!unitDTO) {
-            res.status(404).send({});
-        } else {
-            res.json(unitToDto(unitDTO));
-        }
+        const unit = await unitService.getUnitById(req.params.id);
+        res.json(unit);
     },
 
     async create(req, res) {
-        const newUnit = await createUnit(req.body);
-        res.status(201).json(unitToDto(newUnit));
+        const newUnit = await unitService.createUnit(req.body);
+        res.status(201).json(newUnit);
     },
 
     async update(req, res) {
-        const unitDTO = await updateUnit(req.params.id, req.body);
-        res.json(unitToDto(unitDTO));
+        const updatedUnit = await unitService.updateUnit(req.params.id, req.body);
+        res.json(updatedUnit);
     },
 
     async delete(req, res) {
-        await deleteUnit(req.params.id);
-        res.status(204).send();
+        const result = await unitService.deleteUnit(req.params.id);
+        res.status(204).json(result);
     }
 };

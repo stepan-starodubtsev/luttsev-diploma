@@ -12,14 +12,14 @@ const {ROLES} = require('./config/constants');
 
 // Routers
 const authRouter = require('./routes/authRouter');
-const maintenanceRouter = require('./routes/maintenanceRouter');
-const repairComponentRouter = require('./routes/repairComponentRouter');
-const repairRouter = require('./routes/repairRouter');
+const maintenanceRouter = require('./routes/exerciseRouter');
+const repairComponentRouter = require('./routes/militaryPersonnelRouter');
+const repairRouter = require('./routes/sessionExerciseRouter');
 const userRouter = require('./routes/userRouter');
 const unitRouter = require('./routes/unitRouter');
-const vehicleRouter = require('./routes/vehicleRouter');
-const mileageLogRouter = require('./routes/mileageLogRouter');
-const vehicleComponentRouter = require('./routes/vehicleComponentRouter');
+const vehicleRouter = require('./routes/trainingSessionRouter');
+const mileageLogRouter = require('./routes/locationRouter');
+const vehicleComponentRouter = require('./routes/standardAssessmentRouter');
 
 app.use(express.json());
 

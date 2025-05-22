@@ -6,6 +6,12 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     port: process.env.DB_PORT || 5432,
     dialect: 'postgres',
     logging: false,
+    define: {
+        underscored: true,
+        timestamps: true,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
 });
 
 sequelize.authenticate()

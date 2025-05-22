@@ -1,43 +1,32 @@
-const {userToDto} = require("../dtos/user.dto");
-const {
-    getAllUsers,
-    getUserById,
-    createUser,
-    updateUser,
-    deleteUser
-} = require("../services/UserService");
+const userService = require('../services/userService');
+const AppError = require('../errors/AppError');
 
 module.exports = {
     async getAll(req, res) {
-        const users = await getAllUsers();
+        const users = await userService.getAllUsers();
         if (!users) {
-            res.status(404).send({});
-        } else {
-            res.json(users.map(user => userToDto(user)));
+            return res.json([]);
         }
+        res.json(users);
     },
 
     async getById(req, res) {
-        const userDTO = await getUserById(req.params.id);
-        if (!userDTO) {
-            res.status(404).send({});
-        } else {
-            res.json(userToDto(userDTO));
-        }
+        const user = await userService.getUserById(req.params.id);
+        res.json(user);
     },
 
     async create(req, res) {
-        const newUser = await createUser(req.body);
-        res.status(201).json(userToDto(newUser));
+        const newUser = await userService.createUser(req.body);
+        res.status(201).json(newUser);
     },
 
     async update(req, res) {
-        const userDTO = await updateUser(req.params.id, req.body);
-        res.json(userToDto(userDTO));
+        const updatedUser = await userService.updateUser(req.params.id, req.body);
+        res.json(updatedUser);
     },
 
     async delete(req, res) {
-        await deleteUser(req.params.id);
-        res.status(204).send();
+        const result = await userService.deleteUser(req.params.id);
+        res.status(204).json(result);
     }
 };
