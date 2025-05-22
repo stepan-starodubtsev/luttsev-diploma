@@ -5,7 +5,7 @@ const {
     createUser,
     updateUser,
     deleteUser
-} = require("../services/UserService");
+} = require("../services/trainingSessionService");
 
 module.exports = {
     async getAll(req, res) {

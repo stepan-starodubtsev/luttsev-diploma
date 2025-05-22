@@ -1,5 +1,5 @@
 const {getVehicleComponentsByVehicleId} = require("../services/VehicleComponentService");
-const {getMileagesLogsByVehicleIdForThisYear} = require("../services/MileageLogService");
+const {getMileagesLogsByVehicleIdForThisYear} = require("../services/ptUnitService");
 const {vehicleComponentToDto} = require("./vehicleComponent.dto");
 
 const calculateAnnualResourceActual = async (vehicle) => {

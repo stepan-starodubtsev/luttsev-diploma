@@ -5,7 +5,7 @@ const {
     createRepair,
     updateRepair,
     deleteRepair
-} = require("../services/RepairService");
+} = require("../services/exerciseService");
 
 module.exports = {
     async getAll(req, res) {

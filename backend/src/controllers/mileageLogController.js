@@ -4,7 +4,7 @@ const {
     createMileageLog,
     getMileageLogById,
     deleteMileageLog
-} = require("../services/MileageLogService");
+} = require("../services/ptUnitService");
 
 module.exports = {
     async getAll(req, res) {

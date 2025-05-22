@@ -3,8 +3,8 @@ const {
     getRepairComponentById,
     createRepairComponent,
     deleteRepairComponent
-} = require("../services/RepairComponentService");
-const {updateRepairComponent} = require("../services/RepairComponentService");
+} = require("../services/militaryPersonnelService");
+const {updateRepairComponent} = require("../services/militaryPersonnelService");
 const {repairComponentToDto} = require("../dtos/repairComponent.dto");
 
 module.exports = {

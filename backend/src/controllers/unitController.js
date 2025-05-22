@@ -5,7 +5,7 @@ const {
     createUnit,
     updateUnit,
     deleteUnit
-} = require("../services/UnitService");
+} = require("../services/locationService");
 
 module.exports = {
     async getAll(req, res) {

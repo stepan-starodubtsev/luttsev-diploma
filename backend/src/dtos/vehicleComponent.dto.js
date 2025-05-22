@@ -1,4 +1,4 @@
-const {getMileagesLogsByVehicleIdForThisYear} = require("../services/MileageLogService");
+const {getMileagesLogsByVehicleIdForThisYear} = require("../services/ptUnitService");
 
 const calculateAnnualResourceActual = async (component) => {
     const logs = await getMileagesLogsByVehicleIdForThisYear(component.vehicleId);

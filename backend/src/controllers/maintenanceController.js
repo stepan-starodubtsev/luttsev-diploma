@@ -1,4 +1,3 @@
-const Maintenance = require('../models/Maintenance');
 const {maintenanceToDto} = require("../dtos/maintenance.dto");
 const {
     getAllMaintenances,
@@ -6,7 +5,7 @@ const {
     createMaintenance,
     updateMaintenance,
     deleteMaintenance
-} = require("../services/MaintenanceService");
+} = require("../services/ptUserService");
 
 module.exports = {
     async getAll(req, res) {

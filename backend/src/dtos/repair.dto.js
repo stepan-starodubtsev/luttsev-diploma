@@ -1,4 +1,4 @@
-const {getRepairComponentsByRepairId} = require("../services/RepairComponentService");
+const {getRepairComponentsByRepairId} = require("../services/militaryPersonnelService");
 const {repairComponentToDto} = require("./repairComponent.dto");
 
 const getRepairComponents = async (repairDTO) => {

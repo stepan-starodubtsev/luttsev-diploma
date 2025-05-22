@@ -1,14 +1,14 @@
 const sequelize = require('./config/settingsDB');
 const bcrypt = require('bcryptjs');
 
-const User = require('./models/User');
-const Unit = require('./models/Unit');
-const Vehicle = require('./models/Vehicle');
-const VehicleComponent = require('./models/VehicleComponent');
-const Repair = require('./models/Repair');
-const RepairComponent = require('./models/RepairComponent');
-const Maintenance = require('./models/Maintenance');
-const MileageLog = require('./models/MileageLog');
+const User = require('./models/ptUser.model');
+const Unit = require('./models/ptUnit.model');
+const Vehicle = require('./models/sessionExercise.model');
+const VehicleComponent = require('./models/standardAssessment.model');
+const Repair = require('./models/location.model');
+const RepairComponent = require('./models/trainingSession.model');
+const Maintenance = require('./models/exercise.model');
+const MileageLog = require('./models/militaryPersonnel.model');
 
 const generateRandomString = (length) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
