@@ -229,14 +229,14 @@ const StandardAssessmentFormPage = () => {
                                     disabled={isLoading}
                                 />
                             </Grid>
-                            <Grid item xs={12} md={4}>
+                            <Grid item size={4}>
                                 <TextField
                                     label="Примітки (опціонально)"
                                     name="notes"
                                     value={assessment.notes || ''}
                                     onChange={handleChange}
                                     fullWidth
-                                    multiline
+                                    
                                     rows={3}
                                     disabled={isLoading}
                                 />

@@ -99,11 +99,11 @@ class UnitStore {
         try {
             const updated = yield updateUnit(unitId, unitData);
             runInAction(() => {
-                const index = this.units.findIndex(u => u.unit_id === parseInt(unitId)); // Використовуємо unit_id
+                const index = this.units.findIndex(u => u.unit_id === unitId); // Використовуємо unit_id
                 if (index !== -1) {
                     this.units[index] = updated;
                 }
-                if (this.selectedUnit && this.selectedUnit.unit_id === parseInt(unitId)) {
+                if (this.selectedUnit && this.selectedUnit.unit_id === unitId) {
                     this.selectedUnit = updated;
                 }
             });
@@ -127,7 +127,7 @@ class UnitStore {
         const originalUnits = [...this.units];
         try {
             runInAction(() => {
-                this.units = this.units.filter(u => u.unit_id !== parseInt(unitId)); // Використовуємо unit_id
+                this.units = this.units.filter(u => u.unit_id !== unitId); // Використовуємо unit_id
             });
             yield deleteUnit(unitId);
         } catch (error) {

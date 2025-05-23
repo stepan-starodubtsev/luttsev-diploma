@@ -31,6 +31,7 @@ import NotFoundPage from "./scenes/NotFoundPage/NotFoundPage.jsx";
 import AccessDeniedPage from "./scenes/AccessDeniedPage/AccessDeniedPage.jsx";
 import StandardAssessmentListPage from "./scenes/standard_assessments/StandardAssessmentListPage.jsx";
 import StandardAssessmentFormPage from "./scenes/standard_assessments/StandardAssessmentFormPage.jsx";
+import SessionAssessmentsPage from "./scenes/training_sessions/SessionAssessmentsPage.jsx";
 
 const App = observer(() => {
     const [theme, colorMode] = useMode();
@@ -84,6 +85,7 @@ const App = observer(() => {
                             <Route path="/training-sessions" element={<TrainingSessionListPage />} />
                             <Route path="/training-sessions/create" element={<TrainingSessionFormPage />} />
                             <Route path="/training-sessions/edit/:sessionId" element={<TrainingSessionFormPage />} />
+                            <Route path="/training-sessions/:sessionId/unit/:unitId/assessments" element={<SessionAssessmentsPage />} /> {/* Ваш новий маршрут */}
 
                             <Route path="/standard-assessments" element={<StandardAssessmentListPage />} />
                             <Route path="/standard-assessments/create" element={<StandardAssessmentFormPage />} />
@@ -199,11 +201,10 @@ export default App;
 //                             </Route>
 //
 //                             <Route element={<ProtectedRoute allowedRoles={instructorsAndAbove}/>}>
-//                                 <Route path="/training-sessions" element={<TrainingSessionListPage/>}/>
-//                                 <Route path="/training-sessions/create" element={<TrainingSessionFormPage/>}/>
-//                                 <Route path="/training-sessions/edit/:sessionId" element={<TrainingSessionFormPage/>}/>
-//                                 {/* Додайте сюди маршрути для StandardAssessments, якщо вони мають окремі сторінки */}
-//                                 {/* <Route path="/training-sessions/:sessionId/assessments" element={<AssessmentsForSessionPage />} /> */}
+//                                 <Route path="/training-sessions" element={<TrainingSessionListPage />} />
+//                                 <Route path="/training-sessions/create" element={<TrainingSessionFormPage />} />
+//                                 <Route path="/training-sessions/edit/:sessionId" element={<TrainingSessionFormPage />} />
+//                                 <Route path="/training-sessions/:sessionId/unit/:unitId/assessments" element={<SessionAssessmentsPage />} /> {/* Ваш новий маршрут */}
 //                             </Route>
 //
 //                             <Route element={<ProtectedRoute allowedRoles={instructorsAndAbove}/>}>

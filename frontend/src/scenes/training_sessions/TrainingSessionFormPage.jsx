@@ -10,9 +10,6 @@ import {
     Stack,
     MenuItem,
     IconButton,
-    List,
-    ListItem,
-    ListItemText,
     Paper,
     CircularProgress
 } from "@mui/material";
@@ -26,16 +23,18 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/uk';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
+import RateReviewIcon from '@mui/icons-material/RateReview'; // Іконка для кнопки оцінок
 
-import trainingSessionStore from "../../stores/trainingSessionStore"; // Розкоментовано
-import userStore from "../../stores/userStore.js"; // Розкоментовано
-import unitStore from "../../stores/unitStore.js"; // Розкоментовано
-import locationStore from "../../stores/locationStore"; // Розкоментовано
-import exerciseStore from "../../stores/exerciseStore"; // Розкоментовано
-import useError from "../../utils/useError.js"; // Розкоментовано
-import {SessionTypes} from "../../utils/constants.js"; // Переконайтесь, що є
+import trainingSessionStore from "../../stores/trainingSessionStore";
+import userStore from "../../stores/userStore.js";
+import unitStore from "../../stores/unitStore.js";
+import locationStore from "../../stores/locationStore";
+import exerciseStore from "../../stores/exerciseStore";
+import useError from "../../utils/useError.js";
+import { SessionTypes, ROLES } from "../../utils/constants.js"; // Імпортуємо ROLES
+import authStore from "../../stores/authStore.js"; // Імпортуємо authStore
 
-const TrainingSessionFormPage = () => {
+const TrainingSessionFormPage =() => {
     const theme = useTheme();
     const {sessionId} = useParams();
     const navigate = useNavigate();
@@ -47,19 +46,17 @@ const TrainingSessionFormPage = () => {
         end_datetime: dayjs().add(1, 'hour'),
         location_id: '',
         conducted_by_user_id: '',
-        unit_id: '',
-        exercises: [], // Масив об'єктів { exercise_id: '', order_in_session: 1 }
+        unit_id: '', // Використовуємо unit_id, як у моделі Unit
+        exercises: [], // Масив об'єктів { exercise_id: '', exercise_name: '', order_in_session: 1 }
     });
     const [formError, setFormError] = useState('');
-    const [isLoading, setIsLoading] = useState(false); // Локальний для завантаження форми
+    const [isLoading, setIsLoading] = useState(false);
     const areRelatedStoresLoading = locationStore.loading || userStore.loading || unitStore.loading || exerciseStore.loading;
-
 
     useEffect(() => {
         const fetchData = async () => {
-            // Завантажуємо довідники, якщо їх немає
             if (locationStore.locations.length === 0 && !locationStore.loading) await locationStore.loadLocations();
-            if (userStore.users.length === 0 && !userStore.loading) await userStore.loadUsers(); // Можливо, фільтрувати за ролями
+            if (userStore.users.length === 0 && !userStore.loading) await userStore.loadUsers();
             if (unitStore.units.length === 0 && !unitStore.loading) await unitStore.loadUnits();
             if (exerciseStore.exercises.length === 0 && !exerciseStore.loading) await exerciseStore.loadExercises();
 
@@ -71,12 +68,14 @@ const TrainingSessionFormPage = () => {
                         ...data,
                         start_datetime: data.start_datetime ? dayjs(data.start_datetime) : dayjs(),
                         end_datetime: data.end_datetime ? dayjs(data.end_datetime) : dayjs().add(1, 'hour'),
-                        // Бекенд має повертати exercises як масив об'єктів { exercise_id, order_in_session, ... }
-                        // якщо це зв'язок many-to-many через SessionExercise, можливо потрібно буде трансформувати
+                        // Переконуємося, що exercises містить exercise_id, exercise_name та order_in_session
                         exercises: data.exercises ? data.exercises.map(ex => ({
                             exercise_id: ex.exercise_id,
+                            // Припускаємо, що модель Exercise має exercise_name, і воно підтягується через include
+                            exercise_name: ex.exercise_name || (exerciseStore.exercises.find(e => e.exercise_id === ex.exercise_id)?.exercise_name || `Вправа ID ${ex.exercise_id}`),
                             order_in_session: ex.SessionExercise?.order_in_session || ex.order_in_session || 0
-                        })) : []
+                        })) : [],
+                        unit_id: data.unit_id || (data.unit ? data.unit.unit_id : ''),
                     });
                 } else {
                     setFormError("Не вдалося завантажити дані заняття.");
@@ -97,9 +96,6 @@ const TrainingSessionFormPage = () => {
             setFormError('');
         };
         fetchData();
-        return () => {
-            // trainingSessionStore.clearSelectedSession();
-        }
     }, [sessionId]);
 
     useError(trainingSessionStore);
@@ -119,20 +115,29 @@ const TrainingSessionFormPage = () => {
     const handleAddExercise = () => {
         setSession(prev => ({
             ...prev,
-            exercises: [...prev.exercises, {exercise_id: '', order_in_session: prev.exercises.length + 1}]
+            exercises: [...prev.exercises, {exercise_id: '', exercise_name: '', order_in_session: prev.exercises.length + 1}]
         }));
     };
 
     const handleExerciseChange = (index, field, value) => {
         const newExercises = [...session.exercises];
-        newExercises[index] = {...newExercises[index], [field]: value};
-        newExercises.forEach((ex, i) => ex.order_in_session = i + 1); // Оновлюємо порядок
+        if (field === 'exercise_id') {
+            const selectedEx = exerciseStore.exercises.find(ex => ex.exercise_id === parseInt(value));
+            newExercises[index] = {
+                ...newExercises[index],
+                exercise_id: value,
+                exercise_name: selectedEx ? selectedEx.exercise_name : ''
+            };
+        } else {
+            newExercises[index] = {...newExercises[index], [field]: value};
+        }
+        newExercises.forEach((ex, i) => ex.order_in_session = i + 1);
         setSession(prev => ({...prev, exercises: newExercises}));
     };
 
     const handleRemoveExercise = (index) => {
         const newExercises = session.exercises.filter((_, i) => i !== index);
-        newExercises.forEach((ex, i) => ex.order_in_session = i + 1); // Оновлюємо порядок
+        newExercises.forEach((ex, i) => ex.order_in_session = i + 1);
         setSession(prev => ({...prev, exercises: newExercises}));
     };
 
@@ -149,6 +154,10 @@ const TrainingSessionFormPage = () => {
             setFormError("Для кожної доданої вправи необхідно обрати саму вправу.");
             return false;
         }
+        if (session.session_type === 'STANDARDS_ASSESSMENT' && !session.unit_id) {
+            setFormError("Для здачі нормативів необхідно вказати підрозділ.");
+            return false;
+        }
         setFormError('');
         return true;
     };
@@ -161,26 +170,30 @@ const TrainingSessionFormPage = () => {
         setIsLoading(true);
         setFormError('');
         const dataToSubmit = {
-            ...session,
+            session_type: session.session_type,
             start_datetime: session.start_datetime ? session.start_datetime.toISOString() : null,
             end_datetime: session.end_datetime ? session.end_datetime.toISOString() : null,
-            exercises: session.exercises.map(ex => ({
-                exercise_id: parseInt(ex.exercise_id), // Переконуємось, що ID є числом
-                order_in_session: ex.order_in_session
-            })),
-            // Переконуємось, що ID є числами або null
             location_id: session.location_id ? parseInt(session.location_id) : null,
             conducted_by_user_id: session.conducted_by_user_id ? parseInt(session.conducted_by_user_id) : null,
             unit_id: session.unit_id ? parseInt(session.unit_id) : null,
+            exercises: session.exercises.map(ex => ({
+                exercise_id: parseInt(ex.exercise_id),
+                order_in_session: ex.order_in_session
+            })),
         };
-        if (dataToSubmit.unit_id === null || dataToSubmit.unit_id === '') delete dataToSubmit.unit_id;
+        if (dataToSubmit.unit_id === null) delete dataToSubmit.unit_id;
 
 
         try {
             if (sessionId) {
                 await trainingSessionStore.updateSession(parseInt(sessionId), dataToSubmit);
             } else {
-                await trainingSessionStore.addSession(dataToSubmit);
+                const newSession = await trainingSessionStore.addSession(dataToSubmit);
+                // Якщо це нова сесія типу "Здача нормативів", можна одразу перенаправити на сторінку оцінок
+                if (newSession && newSession.session_id && newSession.session_type === 'STANDARDS_ASSESSMENT' && newSession.unit_id) {
+                    navigate(`/training-sessions/${newSession.session_id}/unit/${newSession.unit_id}/assessments`);
+                    return;
+                }
             }
             navigate('/training-sessions');
         } catch (error) {
@@ -190,7 +203,23 @@ const TrainingSessionFormPage = () => {
         }
     };
 
-    if (isLoading && sessionId && !trainingSessionStore.selectedSession) { // Показуємо завантаження тільки при редагуванні
+    const handleNavigateToAssessments = () => {
+        if (session.session_id && session.unit_id && session.exercises && session.exercises.length > 0) {
+            navigate(`/training-sessions/${session.session_id}/unit/${session.unit_id}/assessments`);
+        } else {
+            setFormError("Спочатку збережіть заняття з вправами та вкажіть підрозділ для виставлення оцінок.");
+        }
+    };
+
+    const canShowAssessmentsButton =
+        sessionId && // Тільки для існуючих сесій
+        session.session_type === SessionTypes.find(st => st.value === 'STANDARDS_ASSESSMENT')?.value &&
+        session.exercises && session.exercises.length > 0 &&
+        session.unit_id &&
+        (authStore.userRole === ROLES.INSTRUCTOR || authStore.userRole === ROLES.COMMANDER || authStore.userRole === ROLES.ADMIN || authStore.userRole === ROLES.DEPARTMENT_EMPLOYEE);
+
+
+    if (isLoading && sessionId && !trainingSessionStore.selectedSession) {
         return (
             <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
                 <CircularProgress/>
@@ -211,7 +240,6 @@ const TrainingSessionFormPage = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="uk">
                     <Stack component="form" onSubmit={handleSubmit} spacing={2} sx={{mt: 2}}>
                         <Grid container spacing={2}>
-                            {/* ... (поля session_type, location_id, conducted_by_user_id, unit_id, start_datetime, end_datetime як у попередньому прикладі, але з використанням даних зі сторів) ... */}
                             <Grid item size={4}>
                                 <TextField label="Тип заняття" name="session_type" value={session.session_type || ''}
                                            onChange={handleChange} fullWidth select required
@@ -235,22 +263,29 @@ const TrainingSessionFormPage = () => {
                                            value={session.conducted_by_user_id || ''} onChange={handleChange} fullWidth
                                            select required disabled={isLoading || areRelatedStoresLoading}>
                                     <MenuItem value=""><em>Оберіть відповідального</em></MenuItem>
-                                    {userStore.users.filter(u => u.role === 'INSTRUCTOR' || u.role === 'COMMANDER').map((user) => (
+                                    {userStore.users.filter(u => u.role === ROLES.INSTRUCTOR || u.role === ROLES.COMMANDER || u.role === ROLES.ADMIN).map((user) => (
                                         <MenuItem key={user.user_id}
                                                   value={user.user_id}>{`${user.last_name} ${user.first_name}`}</MenuItem>))}
                                 </TextField>
                             </Grid>
                             <Grid item size={4}>
-                                <TextField label="Підрозділ (опціонально)" name="unit_id" value={session.unit_id || ''}
-                                           onChange={handleChange} fullWidth select
-                                           disabled={isLoading || areRelatedStoresLoading}>
-                                    <MenuItem value=""><em>Не обрано</em></MenuItem>
+                                <TextField
+                                    label="Підрозділ"
+                                    name="unit_id"
+                                    value={session.unit_id || ''}
+                                    onChange={handleChange}
+                                    fullWidth
+                                    select
+                                    required={session.session_type === 'STANDARDS_ASSESSMENT' || session.session_type === 'UNIT_TRAINING'}
+                                    disabled={isLoading || areRelatedStoresLoading}
+                                >
+                                    <MenuItem value=""><em>{session.session_type === 'TRAINING' ? 'Не обрано (загальне)' : 'Оберіть підрозділ'}</em></MenuItem>
                                     {unitStore.units.map((unit) => (
                                         <MenuItem key={unit.unit_id} value={unit.unit_id}>{unit.unit_name}</MenuItem>))}
                                 </TextField>
                             </Grid>
                             <Grid item size={4}>
-                                <DateTimePicker label="Час початку" value={session.start_datetime}
+                                <DateTimePicker label="Час початку" value={dayjs(session.start_datetime)}
                                                 onChange={(newVal) => handleDateTimeChange('start_datetime', newVal)}
                                                 slotProps={{
                                                     textField: {
@@ -261,7 +296,7 @@ const TrainingSessionFormPage = () => {
                                                 }} format="DD.MM.YYYY HH:mm"/>
                             </Grid>
                             <Grid item size={4}>
-                                <DateTimePicker label="Час закінчення" value={session.end_datetime}
+                                <DateTimePicker label="Час закінчення" value={dayjs(session.end_datetime)}
                                                 onChange={(newVal) => handleDateTimeChange('end_datetime', newVal)}
                                                 slotProps={{
                                                     textField: {
@@ -280,7 +315,7 @@ const TrainingSessionFormPage = () => {
                                     <Grid item xs={1} sx={{textAlign: 'center'}}>
                                         <Typography>{index + 1}.</Typography>
                                     </Grid>
-                                    <Grid item size={4}>
+                                    <Grid item xs={10} sm={10}>
                                         <TextField
                                             label="Вправа"
                                             name="exercise_id"
@@ -322,13 +357,25 @@ const TrainingSessionFormPage = () => {
                         {formError && <Typography color="error" sx={{mt: 2}}>{formError}</Typography>}
                         {trainingSessionStore.error &&
                             <Typography color="error" sx={{mt: 1}}>{trainingSessionStore.error}</Typography>}
-                        <Box display="flex" justifyContent="flex-end" mt={3}>
+
+                        <Stack direction="row" justifyContent="flex-end" spacing={2} mt={3}>
+                            {canShowAssessmentsButton && (
+                                <Button
+                                    variant="outlined"
+                                    color="info"
+                                    startIcon={<RateReviewIcon />}
+                                    onClick={handleNavigateToAssessments}
+                                    disabled={isLoading || trainingSessionStore.loading}
+                                >
+                                    Оцінки
+                                </Button>
+                            )}
                             <Button type="submit" variant="contained" color="secondary"
                                     disabled={isLoading || trainingSessionStore.loading || areRelatedStoresLoading}>
                                 {isLoading || trainingSessionStore.loading ?
                                     <CircularProgress size={24}/> : (sessionId ? "Зберегти Зміни" : "Створити Заняття")}
                             </Button>
-                        </Box>
+                        </Stack>
                     </Stack>
                 </LocalizationProvider>
             </Box>

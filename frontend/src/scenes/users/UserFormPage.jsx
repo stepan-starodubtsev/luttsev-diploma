@@ -135,16 +135,16 @@ const UserFormPage = () => {
             <Box>
                 <Stack component="form" onSubmit={handleSubmit} spacing={2} sx={{ mt: 2 }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item size={4}>
                             <TextField label="Прізвище" name="last_name" value={user.last_name} onChange={handleChange} fullWidth required disabled={isLoading} />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item size={4}>
                             <TextField label="Ім'я" name="first_name" value={user.first_name} onChange={handleChange} fullWidth required disabled={isLoading} />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item size={4}>
                             <TextField label="Email" name="email" type="email" value={user.email} onChange={handleChange} fullWidth required disabled={isLoading} />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item size={4}>
                             <TextField label="Роль" name="role" value={user.role || ''} onChange={handleChange} fullWidth select required disabled={isLoading}>
                                 <MenuItem value=""><em>Оберіть роль</em></MenuItem>
                                 {UserRolesDisplay.map((roleOption) => (
@@ -154,7 +154,7 @@ const UserFormPage = () => {
                                 ))}
                             </TextField>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item size={4}>
                             <FormControl fullWidth variant="outlined" disabled={isLoading}>
                                 <InputLabel htmlFor="password">Пароль {userId ? '(залиште порожнім, щоб не змінювати)' : ''}</InputLabel>
                                 <OutlinedInput
@@ -175,7 +175,7 @@ const UserFormPage = () => {
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item size={4}>
                             <TextField
                                 label="Підрозділ (опціонально)"
                                 name="unit_id"

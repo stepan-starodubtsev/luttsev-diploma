@@ -23,10 +23,9 @@ const TrainingSessionListPage = () => {
             headerName: 'Тип заняття',
             flex: 1,
             type: 'singleSelect',
-            valueOptions: SessionTypes,
             valueGetter: (value) => {
                 const type = SessionTypes.find(st => st.value === value);
-                return type ? type.label : value;
+                return type ? type.label : value.session_type;
             }
         },
         {

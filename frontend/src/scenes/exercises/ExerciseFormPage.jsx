@@ -118,7 +118,7 @@ const ExerciseFormPage = () => {
                         value={exercise.description || ''} // || '' щоб уникнути uncontrolled input
                         onChange={handleChange}
                         fullWidth
-                        multiline
+                        
                         rows={4}
                         disabled={isLoading}
                     />

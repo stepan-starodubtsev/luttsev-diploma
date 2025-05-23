@@ -10,6 +10,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import EventIcon from '@mui/icons-material/Event';
 import PlaceIcon from '@mui/icons-material/Place';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import GradeIcon from '@mui/icons-material/Grade';
 
 import {authStore} from "../../stores/authStore.js";
 
@@ -23,7 +24,6 @@ const TopBar = ({headerBox}) => {
         authStore.logout();
     };
 
-    // TODO: Визначити список навігаційних посилань на основі нових ролей та сторінок
     const navItems = [
         {
             title: "Головна",
@@ -36,6 +36,12 @@ const TopBar = ({headerBox}) => {
             to: "/training-sessions",
             icon: <EventIcon/>,
             roles: ['ADMIN', 'COMMANDER', 'DEPARTMENT_EMPLOYEE', 'INSTRUCTOR']
+        },
+        {
+            title: "Оцінки",
+            to: "/standard-assessments",
+            icon: <GradeIcon/>,
+            roles: ['ADMIN', 'COMMANDER', 'INSTRUCTOR']
         },
         {
             title: "Військовослужбовці",

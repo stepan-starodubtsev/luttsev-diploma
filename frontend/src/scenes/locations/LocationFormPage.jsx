@@ -97,7 +97,7 @@ const LocationFormPage = () => {
                         value={location.description}
                         onChange={handleChange}
                         fullWidth
-                        multiline
+                        
                         rows={4}
                     />
                     {formError && !formError.includes("Назва") && <Typography color="error">{formError}</Typography>}

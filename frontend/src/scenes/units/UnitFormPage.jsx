@@ -22,7 +22,7 @@ const UnitFormPage = () => {
     useEffect(() => {
         if (unitId) {
             setIsLoading(true);
-            unitStore.loadUnitById(parseInt(unitId)).then((data) => {
+            unitStore.loadUnitById(unitId).then((data) => {
                 if (data) {
                     setUnit(data);
                 } else {
@@ -64,7 +64,7 @@ const UnitFormPage = () => {
 
         try {
             if (unitId) {
-                await unitStore.updateUnit(parseInt(unitId), dataToSubmit);
+                await unitStore.updateUnit(unitId, dataToSubmit);
             } else {
                 await unitStore.addUnit(dataToSubmit);
             }
