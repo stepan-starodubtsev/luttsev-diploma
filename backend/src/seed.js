@@ -10,17 +10,25 @@ const TrainingSession = require('./models/trainingSession.model');
 const SessionExercise = require('./models/sessionExercise.model');
 const StandardAssessment = require('./models/standardAssessment.model');
 
-const firstNames = ['Іван', 'Петро', 'Олександр', 'Дмитро', 'Володимир', 'Андрій', 'Сергій', 'Михайло', 'Віктор', 'Юрій', 'Олег', 'Тарас', 'Богдан', 'Максим', 'Артем', 'Денис', 'Євген', 'Назар'];
-const lastNames = ['Петренко', 'Іванов', 'Сидоренко', 'Коваленко', 'Шевченко', 'Мельник', 'Ткаченко', 'Бондаренко', 'Поліщук', 'Кравченко', 'Савченко', 'Бойко', 'Шевчук', 'Лисенко', 'Павленко', 'Григоренко', 'Романенко', 'Сергієнко'];
-const patronymics = ['Іванович', 'Петрович', 'Олександрович', 'Дмитрович', 'Володимирович', 'Андрійович', 'Сергійович', 'Михайлович', 'Вікторович', 'Юрійович', 'Олегович', 'Тарасович', 'Богданович', 'Максимович', 'Артемович', 'Денисович', 'Євгенович', 'Назарович'];
+const firstNames = ['Іван', 'Петро', 'Олександр', 'Дмитро', 'Володимир', 'Андрій',
+    'Сергій', 'Михайло', 'Віктор', 'Юрій', 'Олег', 'Тарас', 'Богдан', 'Максим', 'Артем', 'Денис', 'Євген', 'Назар'];
+const lastNames = ['Петренко', 'Іванов', 'Сидоренко', 'Коваленко',
+    'Шевченко', 'Мельник', 'Ткаченко', 'Бондаренко', 'Поліщук', 'Кравченко',
+    'Савченко', 'Бойко', 'Шевчук', 'Лисенко', 'Павленко', 'Григоренко', 'Романенко', 'Сергієнко'];
+const patronymics = ['Іванович', 'Петрович', 'Олександрович', 'Дмитрович',
+    'Володимирович', 'Андрійович', 'Сергійович', 'Михайлович', 'Вікторович', 'Юрійович',
+    'Олегович', 'Тарасович', 'Богданович', 'Максимович', 'Артемович', 'Денисович', 'Євгенович', 'Назарович'];
 const ranks = ['курсант', 'солдат', 'сержант', 'старшина', 'лейтенант', 'старший лейтенант', 'капітан'];
 
 const randomChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const generateRandomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+const generateRandomDate =
+    (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 
-const generateUkrainianFullName = () => `${randomChoice(lastNames)} ${randomChoice(firstNames)} ${randomChoice(patronymics)}`;
-const generateUkrainianShortName = () => `${randomChoice(lastNames)} ${randomChoice(firstNames).charAt(0)}. ${randomChoice(patronymics).charAt(0)}.`;
+const generateUkrainianFullName = () => `${randomChoice(lastNames)} 
+${randomChoice(firstNames)} ${randomChoice(patronymics)}`;
+const generateUkrainianShortName = () => `${randomChoice(lastNames)}
+ ${randomChoice(firstNames).charAt(0)}. ${randomChoice(patronymics).charAt(0)}.`;
 
 
 const seedDatabase = async () => {
@@ -71,14 +79,6 @@ const seedDatabase = async () => {
                 unit_id: null
             },
             {
-                first_name: 'Олександр',
-                last_name: 'Командиренко',
-                email: 'commander1@sport.local',
-                password_hash: passwordHash,
-                role: 'COMMANDER',
-                unit_id: units[0].unit_id
-            },
-            {
                 first_name: 'Сергій',
                 last_name: 'Відділенко',
                 email: 'department@sport.local',
@@ -86,15 +86,19 @@ const seedDatabase = async () => {
                 role: 'DEPARTMENT_EMPLOYEE',
                 unit_id: null
             },
-            {
-                first_name: 'Володимир',
-                last_name: 'Курсовенко',
-                email: 'commander2@sport.local',
+        ];
+
+        for (let i = 0; i < units.length; i++) {
+            usersData.push({
+                first_name: randomChoice(firstNames),
+                last_name: randomChoice(lastNames),
+                email: `commander_unit${i + 1}@sport.local`,
                 password_hash: passwordHash,
                 role: 'COMMANDER',
-                unit_id: units[2].unit_id
-            },
-        ];
+                unit_id: units[i].unit_id
+            });
+        }
+
         const users = await User.bulkCreate(usersData, {returning: true});
         console.log(`${users.length} users created.`);
 
@@ -203,7 +207,7 @@ const seedDatabase = async () => {
             if (personnelInUnit.length === 0) continue;
 
             const sessionExercises =
-                await SessionExercise.findAll({ where: { session_id: session.session_id } });
+                await SessionExercise.findAll({where: {session_id: session.session_id}});
             if (sessionExercises.length === 0) continue;
 
             for (let k = 0; k < Math.min(personnelInUnit.length, randomInt(5, 15)); k++) {
