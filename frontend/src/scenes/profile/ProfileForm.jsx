@@ -48,7 +48,7 @@ const ProfileForm = () => {
                 first_name: authStore.user.first_name || '',
                 last_name: authStore.user.last_name || '',
                 email: authStore.user.email || '',
-                // username: authStore.user.username || '', // Якщо б було поле username
+                // email: authStore.user.email || '', // Якщо б було поле email
                 password: '', // Пароль завжди порожній при завантаженні
                 role: authStore.user.role || '', // Для відображення
                 unit_id: authStore.user.unit_id || '', // Для відображення
@@ -74,20 +74,15 @@ const ProfileForm = () => {
             first_name: profileData.first_name,
             last_name: profileData.last_name,
             email: profileData.email,
-            // username: profileData.username, // Якщо б було поле username
         };
 
-        if (profileData.password) { // Оновлюємо пароль тільки якщо він введений
+        if (profileData.password) {
             dataToUpdate.password = profileData.password;
         }
 
         try {
-            await userStore.updateUser(authStore.user.user_id, dataToUpdate); // Використовуємо user_id з authStore
-            // Оновити дані користувача в authStore після успішного оновлення на бекенді
-            // Це важливо, щоб користувач бачив оновлені дані без перезавантаження
-            await authStore.validateTokenOnServer(); // Цей метод має перезавантажити дані користувача з бекенду
-            alert('Профіль успішно оновлено!'); // Або Snackbar
-            // navigate('/profile'); // Залишаємося на сторінці профілю
+            await userStore.updateUser(authStore.user.user_id, dataToUpdate);
+            alert('Профіль успішно оновлено!');
         } catch (error) {
             setFormError(userStore.error || "Помилка оновлення профілю");
         } finally {

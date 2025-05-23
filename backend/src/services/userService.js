@@ -50,7 +50,6 @@ module.exports = {
     async getUserByEmail(email) {
         const user = await User.findOne({
             where: { email: email },
-            attributes: { exclude: ['password_hash'] }
         });
         if (!user) {
             throw new AppError(`User with email ${email} not found`, 404);

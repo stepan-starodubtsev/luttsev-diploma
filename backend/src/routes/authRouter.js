@@ -21,13 +21,13 @@ const catchErrorsAsync = require('../middleware/catchErrorAsync');
 //         type: object
 //         required:
 //           - name
-//           - username
+//           - email
 //           - password
 //           - role
 //         properties:
 //           name:
 //             type: string
-//           username:
+//           email:
 //             type: string
 //           password:
 //             type: string
@@ -62,10 +62,10 @@ router.post('/register', catchErrorsAsync(register));
 //       schema:
 //         type: object
 //         required:
-//           - username
+//           - email
 //           - password
 //         properties:
-//           username:
+//           email:
 //             type: string
 //           password:
 //             type: string

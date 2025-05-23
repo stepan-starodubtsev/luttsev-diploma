@@ -62,7 +62,7 @@ const TopBar = ({headerBox}) => {
             icon: <MilitaryTechIcon/>,
             roles: ['ADMIN', 'DEPARTMENT_EMPLOYEE', 'COMMANDER']
         },
-        {title: "Користувачі", to: "/users", icon: <PersonOutlinedIcon/>, roles: ['ADMIN']},
+        {title: "Користувачі", to: "/users", icon: <GroupIcon/>, roles: ['ADMIN']},
         {
             title: "Календар",
             to: "/calendar",
