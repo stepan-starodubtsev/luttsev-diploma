@@ -1,12 +1,12 @@
 import {useEffect} from "react";
-import usersStore from "../stores/usersStore.js";
+// import userStore from "../stores/userStore.js";
 
 const useError = () => {
-    useEffect(() => {
-        if (usersStore.error) {
-            console.error(usersStore.error);
-        }
-    }, [usersStore.error])
+    // useEffect(() => {
+    //     if (userStore.error) {
+    //         console.error(userStore.error);
+    //     }
+    // }, [userStore.error])
 }
 
 export default useError;

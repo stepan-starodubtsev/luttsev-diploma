@@ -1,82 +1,56 @@
-import React, {useEffect} from 'react';
+// frontend/src/src/scenes/dashboard/ProfileForm.jsx
+import React from 'react';
 import {observer} from 'mobx-react-lite';
 import Header from "../../components/Header.jsx";
 import {Box, Grid, useTheme} from "@mui/material";
-import {tokens} from "../../theme.js";
 
-import vehiclesStore from '../../stores/vehiclesStore.js';
-import repairsStore from '../../stores/repairsStore.js';
-import maintenancesStore from '../../stores/maintenancesStore.js';
+// Компоненти статистики
+import TotalMilitaryPersonnelStat from "../../components/Charts/analytics/TotalMilitaryPersonnelStat.jsx";
+import WeeklyTrainingSessionsStat from "../../components/Charts/analytics/WeeklyTrainingSessionsStat.jsx";
+import CoveredUnitsStat from "../../components/Charts/analytics/CoveredUnitsStat.jsx";
 
-import VehicleTypePieChart from '../../components/Charts/VehicleTypePieChart.jsx';
-import VehicleFuelTypePieChart from '../../components/Charts/VehicleFuelTypePieChart.jsx';
-import VehicleOilTypePieChart from '../../components/Charts/VehicleOilTypePieChart.jsx';
-import VehicleOperationGroupPieChart from '../../components/Charts/VehicleOperationGroupPieChart.jsx';
-import TotalVehiclesStat from "../../components/Charts/analytics/TotalVehiclesStat.jsx";
-import NeedsRepairStat from "../../components/Charts/analytics/NeedsRepairStat.jsx";
-import NeedsMaintenanceStat from "../../components/Charts/analytics/NeedsMaintenanceStat.jsx";
-import RepairsThisMonthStat from "../../components/Charts/analytics/RepairsThisMonthStat.jsx";
-import MaintenancesThisMonthStat from "../../components/Charts/analytics/MaintenancesThisMonthStat.jsx";
-import MonthlyMileageStat from "../../components/Charts/analytics/MonthlyMileageStat.jsx";
+// Нові компоненти графіків
+import SessionTypePieChart from "../../components/Charts/SessionTypePieChart.jsx";
+import PersonnelByUnitPieChart from "../../components/Charts/PersonnelByUnitPieChart.jsx";
+import SessionsByLocationPieChart from "../../components/Charts/SessionsByLocationPieChart.jsx";
 import TopBar from "../global/TopBar.jsx";
-import mileageLogsStore from "../../stores/mileageLogsStore.js";
+
+// TopBar тепер в App.jsx, тому тут він не потрібен
+// import TopBar from "../global/TopBar.jsx";
 
 const Dashboard = observer(() => {
     const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-
-    useEffect(() => {
-        if (!vehiclesStore.vehicles.length && !vehiclesStore.loading) vehiclesStore.loadVehicles();
-        if (!mileageLogsStore.mileageLogs.length && !mileageLogsStore.loading) mileageLogsStore.loadMileageLogs();
-        if (!repairsStore.repairs.length && !repairsStore.loading) repairsStore.loadRepairs();
-        if (!maintenancesStore.maintenances.length && !maintenancesStore.loading) maintenancesStore.loadMaintenances();
-    }, []);
 
     return (
-        <>
+        <Box m="20px">
             <TopBar headerBox={
-                (<Box display="flex" alignItems="center" justifyContent="space-between">
-                    <Header title="ГОЛОВНА ПАНЕЛЬ" subtitle="Огляд ключових показників"/>
-                </Box>)
+                <Header title={"Головна панель"} subtitle={"Статистика"}/>
             }/>
-            <Box m="20px">
-                <Grid container spacing={1} mb={2}>
-                    <Grid item size={4}>
-                        <TotalVehiclesStat/>
-                    </Grid>
-                    <Grid item size={4}>
-                        <NeedsRepairStat/>
-                    </Grid>
-                    <Grid item size={4}>
-                        <NeedsMaintenanceStat/>
-                    </Grid>
-                    <Grid item size={4}>
-                        <MonthlyMileageStat/>
-                    </Grid>
-                    <Grid item size={4}>
-                        <RepairsThisMonthStat/>
-                    </Grid>
-                    <Grid item size={4}>
-                        <MaintenancesThisMonthStat/>
-                    </Grid>
+            <Grid container spacing={2} mb={3}> {/* Змінив spacing та mb */}
+                <Grid item size={4}>
+                    <TotalMilitaryPersonnelStat/>
                 </Grid>
+                <Grid item size={4}>
+                    <WeeklyTrainingSessionsStat/>
+                </Grid>
+                <Grid item size={4}>
+                    <CoveredUnitsStat/>
+                </Grid>
+            </Grid>
 
-                <Grid container spacing={3} mb={3}>
-                    <Grid item size={3}>
-                        <VehicleTypePieChart/>
-                    </Grid>
-                    <Grid item size={3}>
-                        <VehicleOperationGroupPieChart/>
-                    </Grid>
-                    <Grid item size={3}>
-                        <VehicleFuelTypePieChart/>
-                    </Grid>
-                    <Grid item size={3}>
-                        <VehicleOilTypePieChart/>
-                    </Grid>
+            <Grid container spacing={3} mb={3}>
+                <Grid item xs={12} md={6} lg={4}>
+                    <SessionTypePieChart/>
                 </Grid>
-            </Box>
-        </>
+                <Grid item xs={12} md={6} lg={4}>
+                    <PersonnelByUnitPieChart/>
+                </Grid>
+                <Grid item xs={12} md={6} lg={4}>
+                    <SessionsByLocationPieChart/>
+                </Grid>
+                {/* Тут можна додати інші графіки */}
+            </Grid>
+        </Box>
     );
 });
 

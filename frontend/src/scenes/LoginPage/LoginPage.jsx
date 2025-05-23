@@ -22,7 +22,7 @@ import {ROLES} from "../../utils/constants.js";
 const defaultTheme = createTheme();
 
 const LoginPage = observer(() => {
-    const [username, setUsername] = useState('');
+    const [email, setemail] = useState('');
     const [password, setPassword] = useState('');
 
     const navigate = useNavigate();
@@ -30,11 +30,11 @@ const LoginPage = observer(() => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (!username || !password) {
+        if (!email || !password) {
             authStore.error = "Ім'я користувача та пароль не можуть бути порожніми.";
             return;
         }
-        await authStore.login(username, password);
+        await authStore.login(email, password);
         let destinationLocation;
 
         if (authStore.user.role === ROLES.ADMIN) {
@@ -69,14 +69,14 @@ const LoginPage = observer(() => {
                             margin="normal"
                             required
                             fullWidth
-                            id="username"
+                            id="email"
                             label="Ім'я користувача"
-                            name="username"
-                            autoComplete="username"
+                            name="email"
+                            autoComplete="email"
                             autoFocus
-                            value={username}
+                            value={email}
                             onChange={(e) => {
-                                setUsername(e.target.value);
+                                setemail(e.target.value);
                                 if (authStore.error) authStore.error = null;
                             }}
                             error={!!authStore.error && authStore.error.toLowerCase().includes("користувача")}

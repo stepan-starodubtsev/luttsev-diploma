@@ -1,170 +1,215 @@
-import { createContext, useMemo } from "react";
-import { createTheme } from "@mui/material";
+import {createContext, useMemo, useState} from "react";
+import {createTheme} from "@mui/material/styles";
 
-export const tokens = () => ({
-    grey: {
-        100: "#f0f0f0", // Lightest grey for backgrounds or slight off-white elements
-        200: "#e0e0e0", // Light grey for borders, dividers
-        300: "#c2c2c2", // Slightly darker grey
-        400: "#a3a3a3", // Medium-light grey for secondary text or icons
-        500: "#858585", // Medium grey
-        600: "#666666", // Medium-dark grey for less important text
-        700: "#434343", // Dark grey for primary text
-        800: "#292929", // Very dark grey
-        900: "#141414", // Almost black
-    },
-    primary: {
-        100: "#e0e7ff", // Very light blue/purple for backgrounds of primary elements
-        200: "#c2cfff", // Light blue/purple
-        300: "#a3b8ff", // Medium-light blue/purple
-        400: "#85a0ff", // Medium blue/purple
-        500: "#6688FF", // Main primary color
-        600: "#526ECC", // Darker primary
-        700: "#3E55A3", // Even darker
-        800: "#293C7A", // Very dark
-        900: "#141E51", // Almost black-blue
-    },
-    secondary: {
-        100: "#e0f3ff", // Very light blue for secondary element backgrounds
-        200: "#c2e7ff", // Light blue
-        300: "#a3d9ff", // Medium-light blue
-        400: "#85ccff", // Medium blue
-        500: "#4dabf5", // Main secondary color (приємний синій)
-        600: "#3b8dd1", // Darker secondary
-        700: "#2c6faa", // Even darker
-        800: "#1e5083", // Very dark blue
-        900: "#0f285D", // Almost black-blue
-    },
-    greenAccent: {
-        300: "#94e2cd",
-        500: "#4cceac",
-        700: "#2e7c67",
-    },
-    redAccent: {
-        300: "#f1b9b7",
-        500: "#db4f4a",
-        700: "#af3f3b",
-    },
-    backgroundLight: "#f4f6f8",
-    paperLight: "#ffffff",
+export const tokens = (mode) => ({
+    ...(mode === "dark"
+        ? {
+            grey: {
+                100: "#e0e0e0",
+                200: "#c2c2c2",
+                300: "#a3a3a3",
+                400: "#858585",
+                500: "#666666",
+                600: "#525252",
+                700: "#3d3d3d",
+                800: "#292929",
+                900: "#141414",
+            },
+            primary: {
+                100: "#d0d1d5",
+                200: "#a1a4ab",
+                300: "#727681",
+                400: "#1F2A40",
+                500: "#141b2d",
+                600: "#101624",
+                700: "#0c101b",
+                800: "#080b12",
+                900: "#040509",
+            },
+            greenAccent: {
+                100: "#dbf5ee",
+                200: "#b7ebde",
+                300: "#94e2cd",
+                400: "#70d8bd",
+                500: "#4cceac",
+                600: "#3da58a",
+                700: "#2e7c67",
+                800: "#1e5245",
+                900: "#0f2922",
+            },
+            redAccent: {
+                100: "#f8dcdb",
+                200: "#f1b9b7",
+                300: "#e99592",
+                400: "#e2726e",
+                500: "#db4f4a",
+                600: "#af3f3b",
+                700: "#832f2c",
+                800: "#58201e",
+                900: "#2c100f",
+            },
+            blueAccent: {
+                100: "#e1e2fe",
+                200: "#c3c6fd",
+                300: "#a4a9fc",
+                400: "#868dfb",
+                500: "#6870fa",
+                600: "#535ac8",
+                700: "#3e4396",
+                800: "#2a2d64",
+                900: "#151632",
+            },
+        }
+        : {
+            grey: {
+                100: "#141414",
+                200: "#292929",
+                300: "#3d3d3d",
+                400: "#525252",
+                500: "#666666",
+                600: "#858585",
+                700: "#a3a3a3",
+                800: "#c2c2c2",
+                900: "#e0e0e0",
+            },
+            primary: {
+                100: "#040509",
+                200: "#080b12",
+                300: "#0c101b",
+                400: "#f2f0f0", // manually changed
+                500: "#141b2d",
+                600: "#1F2A40",
+                700: "#727681",
+                800: "#a1a4ab",
+                900: "#d0d1d5",
+            },
+            greenAccent: {
+                100: "#0f2922",
+                200: "#1e5245",
+                300: "#2e7c67",
+                400: "#3da58a",
+                500: "#4cceac",
+                600: "#70d8bd",
+                700: "#94e2cd",
+                800: "#b7ebde",
+                900: "#dbf5ee",
+            },
+            redAccent: {
+                100: "#2c100f",
+                200: "#58201e",
+                300: "#832f2c",
+                400: "#af3f3b",
+                500: "#db4f4a",
+                600: "#e2726e",
+                700: "#e99592",
+                800: "#f1b9b7",
+                900: "#f8dcdb",
+            },
+            blueAccent: {
+                100: "#151632",
+                200: "#2a2d64",
+                300: "#3e4396",
+                400: "#535ac8",
+                500: "#6870fa",
+                600: "#868dfb",
+                700: "#a4a9fc",
+                800: "#c3c6fd",
+                900: "#e1e2fe",
+            },
+        }),
 });
 
-export const themeSettings = () => {
-    const currentMode = "light";
-    const colors = tokens();
+export const themeSettings = (mode) => {
+    const colors = tokens(mode);
 
     return {
         palette: {
-            mode: currentMode,
-            primary: {
-                main: colors.primary[500],
-                light: colors.primary[300],
-                dark: colors.primary[700],
-            },
-            secondary: {
-                main: colors.secondary[500],
-                light: colors.secondary[300],
-                dark: colors.secondary[700],
-            },
-            neutral: {
-                dark: colors.grey[700],
-                main: colors.grey[500],
-                light: colors.grey[200],
-            },
-            background: {
-                default: colors.backgroundLight,
-                paper: colors.paperLight,
-            },
-            text: {
-                primary: colors.grey[700],
-                secondary: colors.grey[600],
-            },
-            error: {
-                main: colors.redAccent[500],
-            },
-            success: {
-                main: colors.greenAccent[500],
-            },
-            action: {
-                active: colors.primary[500],
-                hover: colors.primary[100],
-                hoverOpacity: 0.08,
-                selected: colors.primary[200],
-                selectedOpacity: 0.16,
-                disabled: colors.grey[400],
-                disabledBackground: colors.grey[100],
-            }
+            mode: mode,
+            ...(mode === "dark"
+                ? {
+                    primary: {
+                        main: colors.primary[500],
+                    },
+                    secondary: {
+                        main: colors.greenAccent[500],
+                    },
+                    neutral: {
+                        dark: colors.grey[700],
+                        main: colors.grey[500],
+                        light: colors.grey[100],
+                    },
+                    background: {
+                        default: colors.primary[500],
+                    },
+                    action: {
+                        selected: colors.primary[700],
+                        hover: colors.primary[600],
+                    }
+                } : {
+                    primary: {
+                        main: colors.primary[100],
+                    },
+                    secondary: {
+                        main: colors.greenAccent[500],
+                    },
+                    neutral: {
+                        dark: colors.grey[700],
+                        main: colors.grey[500],
+                        light: colors.grey[100],
+                    },
+                    background: {
+                        default: "#fcfcfc",
+                    },
+                })
         },
         typography: {
             fontFamily: ["Source Code Pro", "sans-serif"].join(","),
             fontSize: 12,
-            h1: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 32, fontWeight: 600 },
-            h2: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 28, fontWeight: 600 },
-            h3: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 24, fontWeight: 500 },
-            h4: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 20, fontWeight: 500 },
-            h5: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 16, fontWeight: 500 },
-            h6: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 14, fontWeight: 500 },
-            subtitle1: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 16 },
-            subtitle2: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 14 },
-            body1: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 14 },
-            body2: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), fontSize: 12 },
-            button: { fontFamily: ["Source Code Pro", "sans-serif"].join(","), textTransform: 'capitalize', fontSize: 14},
-        },
-        components: {
-            MuiButton: {
-                styleOverrides: {
-                    root: {
-                        borderRadius: '8px',
-                    },
-                },
+            h1: {
+                fontFamily: ["Source Code Pro", "sans-serif"].join(","),
+                fontSize: 40,
             },
-            MuiPaper: {
-                styleOverrides: {
-                    root: {
-                        borderRadius: '8px',
-                    }
-                }
+            h2: {
+                fontFamily: ["Source Code Pro", "sans-serif"].join(","),
+                fontSize: 32,
             },
-            MuiDataGrid: {
-                styleOverrides: {
-                    root: {
-                        border: `1px solid ${tokens().grey[200]}`,
-                        "& .MuiDataGrid-toolbarContainer": {
-                            "& .MuiButton-root": {
-                                color: tokens().grey[700],
-                            },
-                        },
-                        "& .MuiDataGrid-cell:focus, & .MuiDataGrid-columnHeader:focus": {
-                            outline: 'none',
-                        },
-                        "& .MuiDataGrid-row.Mui-selected": {
-                            backgroundColor: tokens().primary[100],
-                        },
-                    },
-                    columnHeaders: {
-                        backgroundColor: tokens().grey[100],
-                        borderBottom: `1px solid ${tokens().grey[300]}`,
-                    },
-                }
-            }
+            h3: {
+                fontFamily: ["Source Code Pro", "sans-serif"].join(","),
+                fontSize: 24,
+            },
+            h4: {
+                fontFamily: ["Source Code Pro", "sans-serif"].join(","),
+                fontSize: 20,
+            },
+            h5: {
+                fontFamily: ["Source Code Pro", "sans-serif"].join(","),
+                fontSize: 16,
+            },
+            h6: {
+                fontFamily: ["Source Code Pro", "sans-serif"].join(","),
+                fontSize: 14,
+            },
         }
     }
 };
 
+
 export const ColorModeContext = createContext({
-    toggleColorMode: () => { console.log("Color mode is locked to light.") }
+    toggleColorMode: () => {}
 });
 
 export const useMode = () => {
-    const mode = "light";
+    const [mode, setMode] = useState("light");
+
     const colorMode = useMemo(
         () => ({
             toggleColorMode: () => {
-                console.log("Theme is locked to light mode. Toggle attempted.");
+                setMode((prev) => (prev === "light" ? "dark" : "light"))
             }
         }),
         []
     );
-    const theme = useMemo(() => createTheme(themeSettings()), [mode]);
+    const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
     return [theme, colorMode];
 };
+

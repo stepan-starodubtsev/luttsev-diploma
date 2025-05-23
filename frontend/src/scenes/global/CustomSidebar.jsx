@@ -16,7 +16,7 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import {authStore} from "../../stores/authStore.js";
 import {ROLES, UserRoles} from "../../utils/constants.js";
-import unitsStore from "../../stores/unitsStore.js";
+import unitStore from "../../stores/unitStore.js";
 
 const Item = ({title, to, icon}) => {
     const {pathname} = useLocation();
@@ -38,7 +38,7 @@ const CustomSidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     useEffect(() => {
         const fetchUnits = async () => {
-        if (!unitsStore.units.length && !unitsStore.loading) await unitsStore.loadUnits();
+        if (!unitStore.units.length && !unitStore.loading) await unitStore.loadUnits();
         }
         fetchUnits();
     }, []);
@@ -113,7 +113,7 @@ const CustomSidebar = () => {
                                         .filter(role => authStore.user.role === role.value)[0].label}
                                 </Typography>
                                 <Typography variant="h5" mt={1} color={colors.greenAccent[300]}>
-                                    {unitsStore.units.filter(unit =>
+                                    {unitStore.units.filter(unit =>
                                         unit.commanderId === authStore.user.id
                                     )[0]?.name}
                                 </Typography>

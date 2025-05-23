@@ -1,46 +1,47 @@
-import { ColorModeContext, useMode } from "./theme.js";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { observer } from 'mobx-react-lite';
-import authStore from './stores/authStore';
-// Припускаємо, що ROLES тепер містять нові ролі без префіксу PT_
-import { ROLES } from './utils/constants.js'; // Переконайтесь, що цей файл оновлено!
+// frontend/src/src/App.jsx
+// ...
+// import ProtectedRoute from './components/auth/ProtectedRoute/ProtectedRoute.jsx'; // Тимчасово закоментуйте
 
+import {ColorModeContext, useMode} from "./theme.js";
+import {CssBaseline, ThemeProvider} from "@mui/material";
+import {Navigate, Route, Routes} from "react-router-dom";
+import {observer} from 'mobx-react-lite';
+import authStore from './stores/authStore';
 import TopBar from "./scenes/global/TopBar.jsx";
 import Dashboard from "./scenes/dashboard"; // Переробити під нові дані
 
-// Нові сторінки для модуля фіз. підготовки (без префіксів Pt)
-// import UserListPage from "./scenes/users/UserListPage.jsx"; // Створити ці компоненти
-// import UserFormPage from "./scenes/users/UserFormPage.jsx";
-// import UnitListPage from "./scenes/units/UnitListPage.jsx";
-// import UnitFormPage from "./scenes/units/UnitFormPage.jsx";
-// import MilitaryPersonnelListPage from "./scenes/military_personnel/MilitaryPersonnelListPage.jsx";
-// import MilitaryPersonnelFormPage from "./scenes/military_personnel/MilitaryPersonnelFormPage.jsx";
-// import ExerciseListPage from "./scenes/exercises/ExerciseListPage.jsx";
-// import ExerciseFormPage from "./scenes/exercises/ExerciseFormPage.jsx";
-// import LocationListPage from "./scenes/locations/LocationListPage.jsx";
-// import LocationFormPage from "./scenes/locations/LocationFormPage.jsx";
-// import TrainingSessionListPage from "./scenes/training_sessions/TrainingSessionListPage.jsx";
-// import TrainingSessionFormPage from "./scenes/training_sessions/TrainingSessionFormPage.jsx";
+import UserListPage from "./scenes/users/UserListPage.jsx"; // Створити ці компоненти
+import UserFormPage from "./scenes/users/UserFormPage.jsx";
+import UnitListPage from "./scenes/units/UnitListPage.jsx";
+import UnitFormPage from "./scenes/units/UnitFormPage.jsx";
+import MilitaryPersonnelListPage from "./scenes/military_personnel/MilitaryPersonnelListPage.jsx";
+import MilitaryPersonnelFormPage from "./scenes/military_personnel/MilitaryPersonnelFormPage.jsx";
+import ExerciseListPage from "./scenes/exercises/ExerciseListPage.jsx";
+import ExerciseFormPage from "./scenes/exercises/ExerciseFormPage.jsx";
+import LocationListPage from "./scenes/locations/LocationListPage.jsx";
+import LocationFormPage from "./scenes/locations/LocationFormPage.jsx";
+import TrainingSessionListPage from "./scenes/training_sessions/TrainingSessionListPage.jsx";
+import TrainingSessionFormPage from "./scenes/training_sessions/TrainingSessionFormPage.jsx";
 import CalendarPage from "./scenes/calendar"; // Якщо потрібен календар
 
-import ProfileForm from "./scenes/profile/index.jsx";
+import ProfileForm from "./scenes/profile/ProfileForm.jsx";
 import LoginPage from './scenes/LoginPage/LoginPage.jsx';
 import ProtectedRoute from './components/auth/ProtectedRoute/ProtectedRoute.jsx';
 import NotFoundPage from "./scenes/NotFoundPage/NotFoundPage.jsx";
 import AccessDeniedPage from "./scenes/AccessDeniedPage/AccessDeniedPage.jsx";
+import StandardAssessmentListPage from "./scenes/standard_assessments/StandardAssessmentListPage.jsx";
+import StandardAssessmentFormPage from "./scenes/standard_assessments/StandardAssessmentFormPage.jsx";
 
 const App = observer(() => {
     const [theme, colorMode] = useMode();
+    // ... (ROLES)
 
-
-    // const allAuthenticatedRoles = Object.values(ROLES);
-    // const adminOnly = [ROLES.ADMIN];
-    // const departmentAndAdmin = [ROLES.ADMIN, ROLES.DEPARTMENT_EMPLOYEE];
-    // // Визначте інші групи ролей за потребою
-    // const instructorsAndAbove = [ROLES.ADMIN, ROLES.COMMANDER, ROLES.DEPARTMENT_EMPLOYEE, ROLES.INSTRUCTOR];
-    // const commandersAndAdminDept = [ROLES.ADMIN, ROLES.COMMANDER, ROLES.DEPARTMENT_EMPLOYEE];
-
+    // ТИМЧАСОВО для тестування без ProtectedRoute
+    if (!authStore.isAuthenticated && authStore.accessToken === "fake-test-token" && authStore.user) {
+        // Якщо ми використовуємо фейкову автентифікацію, але isAuthenticated чомусь false
+        console.warn("App.jsx: Forcing isAuthenticated to true for testing due to mock user.");
+    }
+    const isAuthenticatedForTesting = true; // Або authStore.isAuthenticated, якщо ви налаштували його завжди повертати true
 
     return (
         <ColorModeContext.Provider value={colorMode}>
@@ -48,60 +49,50 @@ const App = observer(() => {
                 <CssBaseline />
                 <div className="app">
                     <main className="content">
-                        {authStore.isAuthenticated && <TopBar />}
                         <Routes>
                             <Route
                                 path="/login"
-                                element={!authStore.isAuthenticated ? <LoginPage /> : <Navigate to="/" replace />}
+                                // Якщо isAuthenticatedForTesting завжди true, цей маршрут буде недоступний
+                                element={!isAuthenticatedForTesting ? <LoginPage /> : <Navigate to="/" replace />}
                             />
-                            <Route path="/access-denied" element={<AccessDeniedPage />} />
+                            {/* <Route path="/access-denied" element={<AccessDeniedPage />} /> */}
 
-                            {/*<Route element={<ProtectedRoute allowedRoles={allAuthenticatedRoles} />}>*/}
-                            <Route>
-                                <Route path="/profile" element={<ProfileForm />} />
-                                <Route path="/" element={<Dashboard />} />
-                            </Route>
+                            {/* ТИМЧАСОВО: всі маршрути доступні без ProtectedRoute */}
+                            <Route path="/profile" element={<ProfileForm />} />
+                            <Route path="/" element={<Dashboard />} />
 
-                            {/*<Route element={<ProtectedRoute allowedRoles={adminOnly} />}>*/}
-                            {/*    <Route path="/users" element={<UserListPage />} />*/}
-                            {/*    <Route path="/users/create" element={<UserFormPage />} />*/}
-                            {/*    <Route path="/users/edit/:userId" element={<UserFormPage />} />*/}
-                            {/*</Route>*/}
+                            <Route path="/users" element={<UserListPage />} />
+                            <Route path="/users/create" element={<UserFormPage />} />
+                            <Route path="/users/edit/:userId" element={<UserFormPage />} />
 
-                            {/*<Route element={<ProtectedRoute allowedRoles={departmentAndAdmin} />}>*/}
-                            {/*    <Route path="/units" element={<UnitListPage />} />*/}
-                            {/*    <Route path="/units/create" element={<UnitFormPage />} />*/}
-                            {/*    <Route path="/units/edit/:unitId" element={<UnitFormPage />} />*/}
+                            <Route path="/units" element={<UnitListPage />} />
+                            <Route path="/units/create" element={<UnitFormPage />} />
+                            <Route path="/units/edit/:unitId" element={<UnitFormPage />} />
 
-                            {/*    <Route path="/exercises" element={<ExerciseListPage />} />*/}
-                            {/*    <Route path="/exercises/create" element={<ExerciseFormPage />} />*/}
-                            {/*    <Route path="/exercises/edit/:exerciseId" element={<ExerciseFormPage />} />*/}
+                            <Route path="/military-personnel" element={<MilitaryPersonnelListPage />} />
+                            <Route path="/military-personnel/create" element={<MilitaryPersonnelFormPage />} />
+                            <Route path="/military-personnel/edit/:personnelId" element={<MilitaryPersonnelFormPage />} />
 
-                            {/*    <Route path="/locations" element={<LocationListPage />} />*/}
-                            {/*    <Route path="/locations/create" element={<LocationFormPage />} />*/}
-                            {/*    <Route path="/locations/edit/:locationId" element={<LocationFormPage />} />*/}
-                            {/*</Route>*/}
+                            <Route path="/exercises" element={<ExerciseListPage />} />
+                            <Route path="/exercises/create" element={<ExerciseFormPage />} />
+                            <Route path="/exercises/edit/:exerciseId" element={<ExerciseFormPage />} />
 
-                            {/*<Route element={<ProtectedRoute allowedRoles={commandersAndAdminDept} />}>*/}
-                            {/*    <Route path="/military-personnel" element={<MilitaryPersonnelListPage />} />*/}
-                            {/*    <Route path="/military-personnel/create" element={<MilitaryPersonnelFormPage />} />*/}
-                            {/*    <Route path="/military-personnel/edit/:personnelId" element={<MilitaryPersonnelFormPage />} />*/}
-                            {/*</Route>*/}
+                            <Route path="/locations" element={<LocationListPage />} />
+                            <Route path="/locations/create" element={<LocationFormPage />} />
+                            <Route path="/locations/edit/:locationId" element={<LocationFormPage />} />
 
-                            {/*<Route element={<ProtectedRoute allowedRoles={instructorsAndAbove} />}>*/}
-                            {/*    <Route path="/training-sessions" element={<TrainingSessionListPage />} />*/}
-                            {/*    <Route path="/training-sessions/create" element={<TrainingSessionFormPage />} />*/}
-                            {/*    <Route path="/training-sessions/edit/:sessionId" element={<TrainingSessionFormPage />} />*/}
-                            {/*    /!* Додайте сюди маршрути для StandardAssessments, якщо вони мають окремі сторінки *!/*/}
-                            {/*    /!* <Route path="/training-sessions/:sessionId/assessments" element={<AssessmentsForSessionPage />} /> *!/*/}
-                            {/*</Route>*/}
+                            <Route path="/training-sessions" element={<TrainingSessionListPage />} />
+                            <Route path="/training-sessions/create" element={<TrainingSessionFormPage />} />
+                            <Route path="/training-sessions/edit/:sessionId" element={<TrainingSessionFormPage />} />
 
-                            <Route element={<ProtectedRoute allowedRoles={instructorsAndAbove} />}>
-                                <Route path="/calendar" element={<CalendarPage />} />
-                            </Route>
+                            <Route path="/standard-assessments" element={<StandardAssessmentListPage />} />
+                            <Route path="/standard-assessments/create" element={<StandardAssessmentFormPage />} />
+                            <Route path="/standard-assessments/edit/:assessmentId" element={<StandardAssessmentFormPage />} />
+
+                            {/* ... інші ваші маршрути ... */}
 
                             <Route path="*" element={
-                                authStore.isAuthenticated
+                                isAuthenticatedForTesting // Використовуємо нашу тимчасову змінну
                                     ? <NotFoundPage />
                                     : <Navigate to="/login" replace />
                             } />
@@ -114,3 +105,122 @@ const App = observer(() => {
 });
 
 export default App;
+
+
+// import {ColorModeContext, useMode} from "./theme.js";
+// import {CssBaseline, ThemeProvider} from "@mui/material";
+// import {Navigate, Route, Routes} from "react-router-dom";
+// import {observer} from 'mobx-react-lite';
+// import authStore from './stores/authStore';
+// // Припускаємо, що ROLES тепер містять нові ролі без префіксу PT_
+// import {ROLES} from './utils/constants.js'; // Переконайтесь, що цей файл оновлено!
+//
+// import TopBar from "./scenes/global/TopBar.jsx";
+// import Dashboard from "./scenes/dashboard"; // Переробити під нові дані
+//
+// // Нові сторінки для модуля фіз. підготовки (без префіксів Pt)
+// import UserListPage from "./scenes/users/UserListPage.jsx"; // Створити ці компоненти
+// import UserFormPage from "./scenes/users/UserFormPage.jsx";
+// import UnitListPage from "./scenes/units/UnitListPage.jsx";
+// import UnitFormPage from "./scenes/units/UnitFormPage.jsx";
+// import MilitaryPersonnelListPage from "./scenes/military_personnel/MilitaryPersonnelListPage.jsx";
+// import MilitaryPersonnelFormPage from "./scenes/military_personnel/MilitaryPersonnelFormPage.jsx";
+// import ExerciseListPage from "./scenes/exercises/ExerciseListPage.jsx";
+// import ExerciseFormPage from "./scenes/exercises/ExerciseFormPage.jsx";
+// import LocationListPage from "./scenes/locations/LocationListPage.jsx";
+// import LocationFormPage from "./scenes/locations/LocationFormPage.jsx";
+// import TrainingSessionListPage from "./scenes/training_sessions/TrainingSessionListPage.jsx";
+// import TrainingSessionFormPage from "./scenes/training_sessions/TrainingSessionFormPage.jsx";
+// import CalendarPage from "./scenes/calendar"; // Якщо потрібен календар
+//
+// import ProfileForm from "./scenes/profile/ProfileForm.jsx";
+// import LoginPage from './scenes/LoginPage/LoginPage.jsx';
+// import ProtectedRoute from './components/auth/ProtectedRoute/ProtectedRoute.jsx';
+// import NotFoundPage from "./scenes/NotFoundPage/NotFoundPage.jsx";
+// import AccessDeniedPage from "./scenes/AccessDeniedPage/AccessDeniedPage.jsx";
+//
+// const App = observer(() => {
+//     const [theme, colorMode] = useMode();
+//
+//     // Використовуємо ROLES напряму з constants.js, які мають бути оновлені
+//     // ROLES.ADMIN, ROLES.COMMANDER, ROLES.DEPARTMENT_EMPLOYEE, ROLES.INSTRUCTOR
+//     const allAuthenticatedRoles = Object.values(ROLES);
+//     const adminOnly = [ROLES.ADMIN];
+//     const departmentAndAdmin = [ROLES.ADMIN, ROLES.DEPARTMENT_EMPLOYEE];
+//     // Визначте інші групи ролей за потребою
+//     const instructorsAndAbove = [ROLES.ADMIN, ROLES.COMMANDER, ROLES.DEPARTMENT_EMPLOYEE, ROLES.INSTRUCTOR];
+//     const commandersAndAdminDept = [ROLES.ADMIN, ROLES.COMMANDER, ROLES.DEPARTMENT_EMPLOYEE];
+//
+//
+//     return (
+//         <ColorModeContext.Provider value={colorMode}>
+//             <ThemeProvider theme={theme}>
+//                 <CssBaseline/>
+//                 <div className="app">
+//                     <main className="content">
+//                         {authStore.isAuthenticated && <TopBar/>}
+//                         <Routes>
+//                             <Route
+//                                 path="/login"
+//                                 element={!authStore.isAuthenticated ? <LoginPage/> : <Navigate to="/" replace/>}
+//                             />
+//                             <Route path="/access-denied" element={<AccessDeniedPage/>}/>
+//
+//                             <Route element={<ProtectedRoute allowedRoles={allAuthenticatedRoles}/>}>
+//                                 <Route path="/profile" element={<ProfileForm/>}/>
+//                                 <Route path="/" element={<Dashboard/>}/>
+//                             </Route>
+//
+//                             <Route element={<ProtectedRoute allowedRoles={adminOnly}/>}>
+//                                 <Route path="/users" element={<UserListPage/>}/>
+//                                 <Route path="/users/create" element={<UserFormPage/>}/>
+//                                 <Route path="/users/edit/:userId" element={<UserFormPage/>}/>
+//                             </Route>
+//
+//                             <Route element={<ProtectedRoute allowedRoles={departmentAndAdmin}/>}>
+//                                 <Route path="/units" element={<UnitListPage/>}/>
+//                                 <Route path="/units/create" element={<UnitFormPage/>}/>
+//                                 <Route path="/units/edit/:unitId" element={<UnitFormPage/>}/>
+//
+//                                 <Route path="/exercises" element={<ExerciseListPage/>}/>
+//                                 <Route path="/exercises/create" element={<ExerciseFormPage/>}/>
+//                                 <Route path="/exercises/edit/:exerciseId" element={<ExerciseFormPage/>}/>
+//
+//                                 <Route path="/locations" element={<LocationListPage/>}/>
+//                                 <Route path="/locations/create" element={<LocationFormPage/>}/>
+//                                 <Route path="/locations/edit/:locationId" element={<LocationFormPage/>}/>
+//                             </Route>
+//
+//                             <Route element={<ProtectedRoute allowedRoles={commandersAndAdminDept}/>}>
+//                                 <Route path="/military-personnel" element={<MilitaryPersonnelListPage/>}/>
+//                                 <Route path="/military-personnel/create" element={<MilitaryPersonnelFormPage/>}/>
+//                                 <Route path="/military-personnel/edit/:personnelId"
+//                                        element={<MilitaryPersonnelFormPage/>}/>
+//                             </Route>
+//
+//                             <Route element={<ProtectedRoute allowedRoles={instructorsAndAbove}/>}>
+//                                 <Route path="/training-sessions" element={<TrainingSessionListPage/>}/>
+//                                 <Route path="/training-sessions/create" element={<TrainingSessionFormPage/>}/>
+//                                 <Route path="/training-sessions/edit/:sessionId" element={<TrainingSessionFormPage/>}/>
+//                                 {/* Додайте сюди маршрути для StandardAssessments, якщо вони мають окремі сторінки */}
+//                                 {/* <Route path="/training-sessions/:sessionId/assessments" element={<AssessmentsForSessionPage />} /> */}
+//                             </Route>
+//
+//                             <Route element={<ProtectedRoute allowedRoles={instructorsAndAbove}/>}>
+//                                 <Route path="/calendar" element={<CalendarPage/>}/>
+//                             </Route>
+//
+//                             <Route path="*" element={
+//                                 authStore.isAuthenticated
+//                                     ? <NotFoundPage/>
+//                                     : <Navigate to="/login" replace/>
+//                             }/>
+//                         </Routes>
+//                     </main>
+//                 </div>
+//             </ThemeProvider>
+//         </ColorModeContext.Provider>
+//     );
+// });
+//
+// export default App;

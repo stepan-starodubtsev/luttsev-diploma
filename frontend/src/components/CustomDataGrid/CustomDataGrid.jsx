@@ -15,6 +15,7 @@ const CustomDataGrid = ({
                             addEntityUrl,
                             editEntityUrl,
                             deleteHandler,
+                            getRowId
                         }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -100,6 +101,7 @@ const CustomDataGrid = ({
                                         handleDeleteButtonClick={handleDeleteButtonClick}
                                         withoutEdit={!editEntityUrl}/>)
                 }}
+                getRowId={getRowId}
             />
             <AlertDialog dialogText={`Видалити №${selectedRowId}?`} isOpen={open} onClose={handleCancelDelete}
                          handleOk={handleConfirmDelete} handleCancel={handleCancel}/>
