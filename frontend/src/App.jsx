@@ -57,8 +57,9 @@ const App = observer(() => {
                                 element={!isAuthenticatedForTesting ? <LoginPage /> : <Navigate to="/" replace />}
                             />
                             {/* <Route path="/access-denied" element={<AccessDeniedPage />} /> */}
+                            //
+                            <Route path="/calendar" element={<CalendarPage/>}/>
 
-                            {/* ТИМЧАСОВО: всі маршрути доступні без ProtectedRoute */}
                             <Route path="/profile" element={<ProfileForm />} />
                             <Route path="/" element={<Dashboard />} />
 
@@ -91,7 +92,6 @@ const App = observer(() => {
                             <Route path="/standard-assessments/create" element={<StandardAssessmentFormPage />} />
                             <Route path="/standard-assessments/edit/:assessmentId" element={<StandardAssessmentFormPage />} />
 
-                            {/* ... інші ваші маршрути ... */}
 
                             <Route path="*" element={
                                 isAuthenticatedForTesting // Використовуємо нашу тимчасову змінну

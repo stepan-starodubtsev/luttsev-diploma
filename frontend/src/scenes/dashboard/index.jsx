@@ -13,7 +13,9 @@ import CoveredUnitsStat from "../../components/Charts/analytics/CoveredUnitsStat
 import SessionTypePieChart from "../../components/Charts/SessionTypePieChart.jsx";
 import PersonnelByUnitPieChart from "../../components/Charts/PersonnelByUnitPieChart.jsx";
 import SessionsByLocationPieChart from "../../components/Charts/SessionsByLocationPieChart.jsx";
+import ScoreDistributionBarChart from "../../components/Charts/ScoreDistributionBarChart.jsx";
 import TopBar from "../global/TopBar.jsx";
+import PerformanceTrendChart from "../../components/Charts/PerformanceTrendChart.jsx";
 
 // TopBar тепер в App.jsx, тому тут він не потрібен
 // import TopBar from "../global/TopBar.jsx";
@@ -39,16 +41,21 @@ const Dashboard = observer(() => {
             </Grid>
 
             <Grid container spacing={3} mb={3}>
-                <Grid item xs={12} md={6} lg={4}>
+                <Grid item size={4}>
                     <SessionTypePieChart/>
                 </Grid>
-                <Grid item xs={12} md={6} lg={4}>
+                <Grid item size={4}>
                     <PersonnelByUnitPieChart/>
                 </Grid>
-                <Grid item xs={12} md={6} lg={4}>
+                <Grid item size={4}>
                     <SessionsByLocationPieChart/>
                 </Grid>
-                {/* Тут можна додати інші графіки */}
+                <Grid item size={6}>
+                    <ScoreDistributionBarChart/>
+                </Grid>
+                <Grid item size={6}>
+                    <PerformanceTrendChart/>
+                </Grid>
             </Grid>
         </Box>
     );

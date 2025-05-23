@@ -36,7 +36,6 @@ const GenericPieChart = ({ title, data, dataKey = "value", nameKey = "name" }) =
                         ))}
                     </Pie>
                     <Tooltip />
-                    <Legend />
                 </PieChart>
             </ResponsiveContainer>
         </Paper>
