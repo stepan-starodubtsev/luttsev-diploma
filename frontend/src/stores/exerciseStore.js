@@ -1,4 +1,3 @@
-// frontend/src/src/stores/exerciseStore.js
 import { makeAutoObservable, runInAction, flow } from 'mobx';
 import {
     getExercises,
@@ -10,7 +9,7 @@ import {
 
 class ExerciseStore {
     exercises = [];
-    selectedExercise = null; // Для форми редагування або деталей
+    selectedExercise = null;
     loading = false;
     error = null;
 
@@ -53,7 +52,7 @@ class ExerciseStore {
             runInAction(() => {
                 this.selectedExercise = data;
             });
-            return data; // Повертаємо для можливості використання у формі
+            return data;
         } catch (error) {
             console.error(`Failed to load exercise ${exerciseId}`, error);
             runInAction(() => {
@@ -80,7 +79,7 @@ class ExerciseStore {
             runInAction(() => {
                 this.error = error.response?.data?.message || error.message || "Не вдалося створити вправу";
             });
-            throw error; // Перекидаємо помилку для обробки у формі
+            throw error;
         } finally {
             runInAction(() => {
                 this.loading = false;
@@ -108,7 +107,7 @@ class ExerciseStore {
             runInAction(() => {
                 this.error = error.response?.data?.message || error.message || `Не вдалося оновити вправу ${exerciseId}`;
             });
-            throw error; // Перекидаємо помилку для обробки у формі
+            throw error;
         } finally {
             runInAction(() => {
                 this.loading = false;
@@ -121,7 +120,6 @@ class ExerciseStore {
         this.error = null;
         const originalExercises = [...this.exercises];
         try {
-            // Оптимістичне видалення
             runInAction(() => {
                 this.exercises = this.exercises.filter(ex => ex.exercise_id !== exerciseId);
             });
@@ -130,7 +128,7 @@ class ExerciseStore {
             console.error(`Failed to delete exercise ${exerciseId}`, error);
             runInAction(() => {
                 this.error = error.message || `Не вдалося видалити вправу ${exerciseId}`;
-                this.exercises = originalExercises; // Відновлюємо, якщо помилка
+                this.exercises = originalExercises;
             });
         } finally {
             runInAction(() => {
@@ -139,7 +137,6 @@ class ExerciseStore {
         }
     }
 
-    // Допоміжна функція для очищення selectedExercise, якщо потрібно
     clearSelectedExercise() {
         this.selectedExercise = null;
     }

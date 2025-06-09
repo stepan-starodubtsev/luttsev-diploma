@@ -34,19 +34,17 @@ export const getLabelFromConstants = (value, constantsArray, valueField = 'value
 export const aggregateScoresForBarChart = (assessments, scoreTypes, units, personnel, selectedUnitId = null) => {
     if (!assessments || assessments.length === 0) return [];
 
-    // Фільтруємо оцінки за обраним підрозділом, якщо він є
     let filteredAssessments = assessments;
     if (selectedUnitId && personnel && units) {
         const personnelInUnit = personnel
             .filter(p => p.unit_id === selectedUnitId)
             .map(p => p.military_person_id);
 
-        if (personnelInUnit.length === 0 && selectedUnitId !== 'all') { // 'all' - для відображення всіх
-            // Якщо в обраному підрозділі немає особового складу, повертаємо порожні дані для цього підрозділу
+        if (personnelInUnit.length === 0 && selectedUnitId !== 'all') {
             return scoreTypes.map(st => ({name: st.label, count: 0, value: st.value}));
         }
 
-        if (selectedUnitId !== 'all') { // Не фільтруємо, якщо вибрано "Всі підрозділи"
+        if (selectedUnitId !== 'all') {
             filteredAssessments = assessments.filter(assessment =>
                 personnelInUnit.includes(assessment.military_person_id)
             );
@@ -55,9 +53,9 @@ export const aggregateScoresForBarChart = (assessments, scoreTypes, units, perso
 
     const scoreCounts = scoreTypes.reduce((acc, scoreType) => {
         acc[scoreType.value] = {
-            name: scoreType.label, // Використовуємо label для відображення на графіку
+            name: scoreType.label,
             count: 0,
-            value: scoreType.value // Зберігаємо оригінальне значення ENUM
+            value: scoreType.value
         };
         return acc;
     }, {});
@@ -66,7 +64,6 @@ export const aggregateScoresForBarChart = (assessments, scoreTypes, units, perso
         if (scoreCounts[assessment.score]) {
             scoreCounts[assessment.score].count += 1;
         } else {
-            // Обробка невідомих значень score, якщо такі можуть бути
             const unknownScoreKey = 'UNKNOWN';
             if (!scoreCounts[unknownScoreKey]) {
                 scoreCounts[unknownScoreKey] = {name: 'Інше/Не вказано', count: 0, value: unknownScoreKey};
@@ -90,7 +87,7 @@ export const aggregatePerformanceByMonth = (assessments, personnel, selectedUnit
             .map(p => p.military_person_id);
 
         if (personnelInUnit.length === 0 && selectedUnitId !== 'all') {
-            return []; // Немає даних для цього підрозділу
+            return [];
         }
         if (selectedUnitId !== 'all') {
             filteredAssessments = assessments.filter(assessment =>
@@ -101,7 +98,7 @@ export const aggregatePerformanceByMonth = (assessments, personnel, selectedUnit
 
     if (filteredAssessments.length === 0) return [];
 
-    const monthlyPerformance = {}; // { 'YYYY-MM': { total: 0, positive: 0, percentage: 0 } }
+    const monthlyPerformance = {};
 
     filteredAssessments.forEach(assessment => {
         const monthYear = dayjs(assessment.assessment_datetime).format('YYYY-MM');
@@ -116,8 +113,8 @@ export const aggregatePerformanceByMonth = (assessments, personnel, selectedUnit
 
     return Object.entries(monthlyPerformance)
         .map(([name, data]) => ({
-            name, // 'YYYY-MM'
-            monthLabel: dayjs(name).format('MMM YYYY'), // Для відображення, наприклад "Січ 2024"
+            name,
+            monthLabel: dayjs(name).format('MMM YYYY'),
             percentage: data.total > 0 ? Math.round((data.positive / data.total) * 100) : 0,
             totalAssessments: data.total,
             positiveAssessments: data.positive,

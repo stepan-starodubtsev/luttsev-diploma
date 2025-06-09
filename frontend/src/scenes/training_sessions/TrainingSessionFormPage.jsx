@@ -1,4 +1,3 @@
-// frontend/src/src/scenes/training_sessions/TrainingSessionFormPage.jsx
 import React, {useState, useEffect} from 'react';
 import {
     Box,
@@ -23,7 +22,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/uk';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
-import RateReviewIcon from '@mui/icons-material/RateReview'; // Іконка для кнопки оцінок
+import RateReviewIcon from '@mui/icons-material/RateReview';
 
 import trainingSessionStore from "../../stores/trainingSessionStore";
 import userStore from "../../stores/userStore.js";
@@ -31,8 +30,8 @@ import unitStore from "../../stores/unitStore.js";
 import locationStore from "../../stores/locationStore";
 import exerciseStore from "../../stores/exerciseStore";
 import useError from "../../utils/useError.js";
-import { SessionTypes, ROLES } from "../../utils/constants.js"; // Імпортуємо ROLES
-import authStore from "../../stores/authStore.js"; // Імпортуємо authStore
+import { SessionTypes, ROLES } from "../../utils/constants.js";
+import authStore from "../../stores/authStore.js";
 
 const TrainingSessionFormPage =() => {
     const theme = useTheme();
@@ -46,8 +45,8 @@ const TrainingSessionFormPage =() => {
         end_datetime: dayjs().add(1, 'hour'),
         location_id: '',
         conducted_by_user_id: '',
-        unit_id: '', // Використовуємо unit_id, як у моделі Unit
-        exercises: [], // Масив об'єктів { exercise_id: '', exercise_name: '', order_in_session: 1 }
+        unit_id: '',
+        exercises: [],
     });
     const [formError, setFormError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -68,10 +67,8 @@ const TrainingSessionFormPage =() => {
                         ...data,
                         start_datetime: data.start_datetime ? dayjs(data.start_datetime) : dayjs(),
                         end_datetime: data.end_datetime ? dayjs(data.end_datetime) : dayjs().add(1, 'hour'),
-                        // Переконуємося, що exercises містить exercise_id, exercise_name та order_in_session
                         exercises: data.exercises ? data.exercises.map(ex => ({
                             exercise_id: ex.exercise_id,
-                            // Припускаємо, що модель Exercise має exercise_name, і воно підтягується через include
                             exercise_name: ex.exercise_name || (exerciseStore.exercises.find(e => e.exercise_id === ex.exercise_id)?.exercise_name || `Вправа ID ${ex.exercise_id}`),
                             order_in_session: ex.SessionExercise?.order_in_session || ex.order_in_session || 0
                         })) : [],
@@ -189,7 +186,6 @@ const TrainingSessionFormPage =() => {
                 await trainingSessionStore.updateSession(sessionId, dataToSubmit);
             } else {
                 const newSession = await trainingSessionStore.addSession(dataToSubmit);
-                // Якщо це нова сесія типу "Здача нормативів", можна одразу перенаправити на сторінку оцінок
                 if (newSession && newSession.session_id && newSession.session_type === 'STANDARDS_ASSESSMENT' && newSession.unit_id) {
                     navigate(`/training-sessions/${newSession.session_id}/unit/${newSession.unit_id}/assessments`);
                     return;
@@ -212,7 +208,7 @@ const TrainingSessionFormPage =() => {
     };
 
     const canShowAssessmentsButton =
-        sessionId && // Тільки для існуючих сесій
+        sessionId &&
         session.session_type === SessionTypes.find(st => st.value === 'STANDARDS_ASSESSMENT')?.value &&
         session.exercises && session.exercises.length > 0 &&
         session.unit_id &&

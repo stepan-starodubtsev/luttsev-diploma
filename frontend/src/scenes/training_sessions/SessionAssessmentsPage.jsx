@@ -1,4 +1,3 @@
-// frontend/src/src/scenes/training_sessions/SessionAssessmentsPage.jsx
 import React, {useEffect, useState, useMemo} from 'react';
 import {
     Box, Typography, Button, Paper, Grid, Select, MenuItem, FormControl, InputLabel, CircularProgress,
@@ -15,7 +14,7 @@ import militaryPersonnelStore from "../../stores/militaryPersonnelStore";
 import standardAssessmentStore from "../../stores/standardAssessmentStore";
 import exerciseStore from "../../stores/exerciseStore";
 import useError from "../../utils/useError.js";
-import {ScoreTypes, SessionTypes} from "../../utils/constants.js"; // Переконайтесь, що імпортовано
+import {ScoreTypes, SessionTypes} from "../../utils/constants.js";
 
 const SessionAssessmentsPage = observer(() => {
     const {sessionId, unitId} = useParams();
@@ -33,14 +32,13 @@ const SessionAssessmentsPage = observer(() => {
 
     const sessionExercises = useMemo(() => {
         if (!sessionDetails || !sessionDetails.exercises) return [];
-        // Переконуємося, що кожна вправа має назву
         return sessionDetails.exercises.map(ex => {
             const fullExercise = exerciseStore.exercises.find(e => e.exercise_id === ex.exercise_id);
             return {
                 ...ex,
                 exercise_name: fullExercise?.exercise_name || `Вправа ID ${ex.exercise_id}`
             };
-        }).sort((a, b) => a.order_in_session - b.order_in_session); // Сортуємо за порядком
+        }).sort((a, b) => a.order_in_session - b.order_in_session);
     }, [sessionDetails, exerciseStore.exercises]);
 
 
@@ -49,16 +47,14 @@ const SessionAssessmentsPage = observer(() => {
             setIsLoading(true);
             setPageError('');
             try {
-                // Завантажуємо всі довідники спочатку
                 const exercisesPromise = exerciseStore.exercises.length === 0 ? exerciseStore.loadExercises() : Promise.resolve();
                 const personnelPromise = militaryPersonnelStore.personnelList.length === 0 ||
                 !militaryPersonnelStore.personnelList.some(p => p.unit_id === unitId)
-                    ? militaryPersonnelStore.loadPersonnel({unit_id: unitId}) // Фільтруємо на бекенді, якщо можливо
+                    ? militaryPersonnelStore.loadPersonnel({unit_id: unitId})
                     : Promise.resolve();
 
                 await Promise.all([exercisesPromise, personnelPromise]);
 
-                // Після завантаження особового складу для підрозділу, оновлюємо стан
                 const personnelData = militaryPersonnelStore.personnelList.filter(p => p.unit_id === unitId);
                 setPersonnel(personnelData || []);
 
@@ -67,17 +63,16 @@ const SessionAssessmentsPage = observer(() => {
                 if (!sessionData || !sessionData.exercises || sessionData.exercises.length === 0) {
                     setPageError("Заняття не знайдено, в ньому немає вправ або вказано невірний підрозділ для оцінювання.");
                     setIsLoading(false);
-                    setSessionDetails(sessionData); // Зберігаємо, щоб показати хоч якусь інформацію
+                    setSessionDetails(sessionData);
                     return;
                 }
                 if (sessionData.unit_id !== unitId) {
                     setPageError(`Це заняття призначене для іншого підрозділу (ID: ${sessionData.unit_id}). Ви переглядаєте оцінки для підрозділу ID: ${unitId}.`);
-                    // Можна дозволити перегляд, але заборонити редагування, або перенаправити
                 }
                 setSessionDetails(sessionData);
 
 
-                if(standardAssessmentStore.assessments.length === 0){
+                if (standardAssessmentStore.assessments.length === 0) {
                     await standardAssessmentStore.loadAssessments({session_id: parseInt(sessionId)});
                 }
                 const existingAssessmentRecords = standardAssessmentStore.assessments;
@@ -144,36 +139,25 @@ const SessionAssessmentsPage = observer(() => {
             }
 
             for (const person of personnel) {
-                for (const exercise of sessionExercises) { // Використовуємо обчислений sessionExercises
+                for (const exercise of sessionExercises) {
                     const key = `${person.military_person_id}_${exercise.exercise_id}`;
                     const newScore = assessments[key];
-                    const newNoteValue = notes[key] !== undefined ? notes[key] : ''; // Гарантуємо, що newNoteValue завжди рядок
+                    const newNoteValue = notes[key] !== undefined ? notes[key] : '';
                     const existing = existingAssessmentsMap[key];
 
-                    // Зберігаємо тільки якщо є оцінка або якщо існуюча оцінка була змінена/видалена (якщо логіка видалення реалізована)
-                    // або якщо примітка була змінена
                     if (newScore !== undefined || (existing && newNoteValue !== existing.notes)) {
-                        if (existing) { // Оновлення існуючої оцінки або її примітки
-                            if (newScore === undefined && !newNoteValue && existing.score) {
-                                // Логіка для видалення оцінки, якщо вона була прибрана і примітка теж порожня
-                                // promises.push(standardAssessmentStore.removeAssessment(existing.assessment_id));
-                            } else if (newScore && (existing.score !== newScore || existing.notes !== newNoteValue)) {
+                        if (existing) {
+                            if (newScore && (existing.score !== newScore || existing.notes !== newNoteValue)) {
                                 promises.push(standardAssessmentStore.updateAssessment(existing.assessment_id, {
                                     session_id: parseInt(sessionId),
                                     military_person_id: person.military_person_id,
                                     exercise_id: exercise.exercise_id,
-                                    score: newScore, // newScore може бути undefined, якщо оцінку прибрали, але залишили примітку
+                                    score: newScore,
                                     notes: newNoteValue,
                                     assessment_datetime: dayjs().toISOString(),
                                 }));
-                            } else if (!newScore && newNoteValue !== existing.notes) { // Оцінки немає, але примітка змінилася
-                                // Тут може знадобитися логіка, що оцінка не може бути пустою, якщо є примітка,
-                                // або ж ми оновлюємо лише примітку. Залежить від вимог.
-                                // Наразі, якщо оцінки немає, але примітка є, ми можемо оновити (але бекенд може вимагати score)
-                                // Або, якщо newScore undefined, а примітка є - можливо, не відправляти на оновлення score.
-                                // Для простоти, зараз, якщо score не вказано, ми не оновлюємо/не створюємо.
                             }
-                        } else if (newScore) { // Створення нової оцінки
+                        } else if (newScore) {
                             promises.push(standardAssessmentStore.addAssessment({
                                 session_id: parseInt(sessionId),
                                 military_person_id: person.military_person_id,
@@ -188,7 +172,6 @@ const SessionAssessmentsPage = observer(() => {
             }
             await Promise.all(promises);
             alert("Оцінки успішно збережено!");
-            // Оновити existingAssessmentsMap після збереження
             const updatedExistingAssessments = await standardAssessmentStore.loadAssessments({session_id: parseInt(sessionId)});
             const newExistingMap = {};
             if (updatedExistingAssessments) {
@@ -221,7 +204,7 @@ const SessionAssessmentsPage = observer(() => {
         return (<Box m="20px"><TopBar/><Alert severity="error">{pageError}</Alert></Box>);
     }
 
-    if (!sessionDetails) { // Додаткова перевірка після завантаження
+    if (!sessionDetails) {
         return (<Box m="20px"><TopBar/><Alert severity="warning">Не вдалося завантажити деталі заняття.</Alert></Box>);
     }
 
@@ -311,7 +294,7 @@ const SessionAssessmentsPage = observer(() => {
                                                                 variant="outlined"
                                                                 value={notes[key] || ''}
                                                                 onChange={(e) => handleNotesChange(person.military_person_id, exercise.exercise_id, e.target.value)}
-                                                                
+
                                                                 minRows={1}
                                                             />
                                                         </Grid>

@@ -1,20 +1,19 @@
-// frontend/src/src/scenes/units/UnitListPage.jsx
 import React, { useEffect } from 'react';
 import { Box, useTheme, CircularProgress, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import Header from "../../components/Header.jsx";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid.jsx";
 import TopBar from "../global/TopBar.jsx";
-import unitStore from "../../stores/unitStore.js"; // Розкоментовано
-import userStore from "../../stores/userStore.js"; // Для відображення командирів
-import useError from "../../utils/useError.js"; // Розкоментовано
+import unitStore from "../../stores/unitStore.js";
+import userStore from "../../stores/userStore.js";
+import useError from "../../utils/useError.js";
 
 const UnitListPage = () => {
     const theme = useTheme();
 
     const columns = [
         { field: 'unit_id', headerName: 'ID', width: 90 },
-        { field: 'unit_name', headerName: 'Назва підрозділу', flex: 1, cellClassName: "name-column--cell" }, // Змінено з name на unit_name
+        { field: 'unit_name', headerName: 'Назва підрозділу', flex: 1, cellClassName: "name-column--cell" },
         {
             field: 'commander_id',
             headerName: 'Командир',
@@ -33,7 +32,7 @@ const UnitListPage = () => {
         }
 
         if (userStore.users.length === 0 && !userStore.loading) {
-            userStore.loadUsers(); // Або userStore.loadUsers({ role: 'COMMANDER' })
+            userStore.loadUsers();
         }
     }, []);
 
@@ -65,7 +64,7 @@ const UnitListPage = () => {
                     addEntityUrl={"/units/create"}
                     editEntityUrl={"/units/edit"}
                     deleteHandler={unitStore.removeUnit.bind(unitStore)}
-                    getRowId={(row) => row.unit_id} // Вказуємо, яке поле є ID
+                    getRowId={(row) => row.unit_id}
                 />
             </Box>
         </Box>

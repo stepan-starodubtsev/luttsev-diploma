@@ -1,4 +1,3 @@
-// frontend/src/src/stores/userStore.js
 import { makeAutoObservable, runInAction, flow } from 'mobx';
 import {
     getUsers,
@@ -6,8 +5,8 @@ import {
     createUser,
     updateUser,
     deleteUser
-} from '../services/userService.js'; // Переконайтесь, що шлях правильний
-import unitStore from "./unitStore.js"; // Якщо потрібно завантажувати підрозділи
+} from '../services/userService.js';
+import unitStore from "./unitStore.js";
 
 class UserStore {
     users = [];
@@ -29,7 +28,6 @@ class UserStore {
         this.loading = true;
         this.error = null;
         try {
-            // Якщо для відображення користувачів потрібні дані підрозділів
             if (unitStore.units.length === 0 && !unitStore.loading) {
                 yield unitStore.loadUnits();
             }
@@ -54,7 +52,6 @@ class UserStore {
         this.error = null;
         this.selectedUser = null;
         try {
-            // Можливо, також завантажити підрозділи, якщо вони потрібні для форми UserForm
             if (unitStore.units.length === 0 && !unitStore.loading) {
                 yield unitStore.loadUnits();
             }
@@ -106,7 +103,7 @@ class UserStore {
                 if(this.users.length === 0){
                     this.loadUsers();
                 }
-                const index = this.users.findIndex(u => u.user_id === userId); // Використовуємо user_id
+                const index = this.users.findIndex(u => u.user_id === userId);
                 if (index !== -1) {
                     this.users[index] = updated;
                 }
@@ -134,7 +131,7 @@ class UserStore {
         const originalUsers = [...this.users];
         try {
             runInAction(() => {
-                this.users = this.users.filter(u => u.user_id !== userId); // Використовуємо user_id
+                this.users = this.users.filter(u => u.user_id !== userId);
             });
             yield deleteUser(userId);
         } catch (error) {

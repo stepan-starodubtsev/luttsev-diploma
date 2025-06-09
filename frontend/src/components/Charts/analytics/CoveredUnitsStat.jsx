@@ -1,10 +1,9 @@
-// frontend/src/src/components/Charts/analytics/CoveredUnitsStat.jsx
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Typography, useTheme } from '@mui/material';
 import StatBox from '../StatBox/StatBox.jsx';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
-import unitStore from '../../../stores/unitStore'; // Новий стор
+import unitStore from '../../../stores/unitStore';
 import { tokens } from "../../../theme.js";
 
 const CoveredUnitsStat = observer(() => {
@@ -21,8 +20,6 @@ const CoveredUnitsStat = observer(() => {
         return <Typography variant="caption">Завантаження...</Typography>;
     }
 
-    // Тут можна додати логіку, щоб рахувати тільки ті підрозділи,
-    // які реально залучені до занять, якщо є така інформація
     const coveredUnitsCount = unitStore.units.length;
 
     return (

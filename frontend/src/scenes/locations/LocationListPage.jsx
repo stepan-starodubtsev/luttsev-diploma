@@ -1,12 +1,11 @@
-// frontend/src/src/scenes/locations/LocationListPage.jsx
 import React, { useEffect } from 'react';
 import { Box, useTheme, CircularProgress, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import Header from "../../components/Header.jsx";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid.jsx";
 import TopBar from "../global/TopBar.jsx";
-import locationStore from "../../stores/locationStore"; // Розкоментовано
-import useError from "../../utils/useError.js"; // Розкоментовано
+import locationStore from "../../stores/locationStore";
+import useError from "../../utils/useError.js";
 
 const LocationListPage = () => {
     const theme = useTheme();

@@ -1,13 +1,10 @@
-const { User, TrainingSession } = require('../models'); // Імпорт через index.js
+const { User, TrainingSession } = require('../models');
 const AppError = require("../errors/AppError");
 const bcrypt = require("bcryptjs");
 const sequelize = require('../config/settingsDB');
-// Для уникнення прямої циркулярної залежності, trainingSessionService можна вимагати всередині методу, якщо потрібно
-// Або краще передавати як залежність (Dependency Injection)
 
 module.exports = {
     async createUser(userData) {
-        // ... (код без змін, використовує User)
         const existingUserByEmail = await User.findOne({where: {email: userData.email}});
         if (existingUserByEmail) {
             throw new AppError(`User with email ${userData.email} already exists`, 400);
@@ -26,16 +23,16 @@ module.exports = {
         return userToReturn;
     },
 
-    async getAllUsers(filters = {}) { // Додав filters
+    async getAllUsers(filters = {}) {
         const users = await User.findAll({
-            where: filters, // Застосовуємо фільтри
+            where: filters, /
             attributes: { exclude: ['password_hash'] },
             order: [
                 ['user_id', 'ASC']
             ]
         });
         if (!users || users.length === 0) {
-            return null; // Або [] для узгодженості з фронтендом
+            return null;
         }
         return users;
     },
@@ -60,7 +57,7 @@ module.exports = {
         return user;
     },
 
-    async updateUser(id, updateData, options = {}) { // Додав options для транзакції
+    async updateUser(id, updateData, options = {}) {
         const transaction = options.transaction;
         const user = await User.findByPk(id, { transaction });
         if (!user) {
@@ -79,7 +76,7 @@ module.exports = {
     },
 
     async deleteUser(id) {
-        const trainingSessionService = require('./trainingSessionService'); // "Лінивий" require
+        const trainingSessionService = require('./trainingSessionService');
         const transaction = await sequelize.transaction();
         try {
             const user = await User.findByPk(id, { transaction });
@@ -88,19 +85,15 @@ module.exports = {
                 throw new AppError(`User with ID ${id} not found`, 404);
             }
 
-            // Видалення або оновлення пов'язаних TrainingSessions
             const sessions = await trainingSessionService.getAllTrainingSessions({ conducted_by_user_id: id });
             if (sessions && sessions.length > 0) {
                 for (const session of sessions) {
-                    // Тут потрібно вирішити: видаляти сесії чи встановлювати conducted_by_user_id = null
-                    // Якщо видаляти:
+
                     await trainingSessionService.deleteTrainingSession(session.session_id, { transaction });
-                    // Якщо оновлювати:
-                    // await trainingSessionService.updateTrainingSession(session.session_id, { conducted_by_user_id: null }, { transaction });
+
                 }
             }
-            // Також потрібно обробити Unit.commander_id, якщо User є командиром
-            const UnitModel = require('../models/Unit.model'); // "Лінивий" require
+            const UnitModel = require('../models/Unit.model');
             await UnitModel.update({ commander_id: null }, { where: { commander_id: id }, transaction });
 
 
@@ -110,7 +103,7 @@ module.exports = {
         } catch (error) {
             await transaction.rollback();
             if (error instanceof AppError) throw error;
-            console.error('Error in deleteUser service:', error); // Додатковий лог
+            console.error('Error in deleteUser service:', error);
             throw new AppError(`Could not delete User with ID ${id}: ${error.message}`, 500);
         }
     }

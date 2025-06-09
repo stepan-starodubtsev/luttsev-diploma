@@ -12,82 +12,10 @@ const catchErrorsAsync = require('../middleware/catchErrorAsync');
  * description: API for authentication
  */
 
-// POST /api/auth/register
-// requestBody:
-//   required: true
-//   content:
-//     application/json:
-//       schema:
-//         type: object
-//         required:
-//           - name
-//           - email
-//           - password
-//           - role
-//         properties:
-//           name:
-//             type: string
-//           email:
-//             type: string
-//           password:
-//             type: string
-//             format: password
-//           role:
-//             type: string
-//             enum: ['UNIT_COMMANDER', 'COMMANDER', 'ADMIN', 'DUTY_STAFF']
-// responses:
-//   201:
-//     description: User registered successfully
-//     content:
-//       application/json:
-//         schema:
-//           type: object
-//           properties:
-//             token:
-//               type: string
-//             user:
-//               $ref: '#/components/schemas/UserDto'
-//   400:
-//     description: Bad request (e.g., user already exists, validation error)
-//   500:
-//     description: Server error
 router.post('/register', catchErrorsAsync(register));
 
 
-// POST /api/auth/login
-// requestBody:
-//   required: true
-//   content:
-//     application/json:
-//       schema:
-//         type: object
-//         required:
-//           - email
-//           - password
-//         properties:
-//           email:
-//             type: string
-//           password:
-//             type: string
-//             format: password
-// responses:
-//   200:
-//     description: User logged in successfully
-//     content:
-//       application/json:
-//         schema:
-//           type: object
-//           properties:
-//             token:
-//               type: string
-//             user:
-//               $ref: '#/components/schemas/UserDto'
-//   400:
-//     description: Invalid credentials
-//   401:
-//     description: Invalid credentials
-//   500:
-//     description: Server error
+
 router.post('/login', catchErrorsAsync(login));
 
 /**

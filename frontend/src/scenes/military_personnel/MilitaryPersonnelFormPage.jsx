@@ -1,4 +1,3 @@
-// frontend/src/src/scenes/military_personnel/MilitaryPersonnelFormPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Typography, useTheme, Grid, Stack, MenuItem, CircularProgress } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,10 +8,10 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/uk';
-import militaryPersonnelStore from "../../stores/militaryPersonnelStore"; // Розкоментовано
-import unitStore from "../../stores/unitStore.js"; // Розкоментовано
-import useError from "../../utils/useError.js"; // Розкоментовано
-import { RANKS_LIST } from "../../utils/constants.js"; // Припускаємо, що ви додали це в constants.js
+import militaryPersonnelStore from "../../stores/militaryPersonnelStore";
+import unitStore from "../../stores/unitStore.js";
+import useError from "../../utils/useError.js";
+import { RANKS_LIST } from "../../utils/constants.js";
 
 const MilitaryPersonnelFormPage = () => {
     const theme = useTheme();
@@ -25,7 +24,7 @@ const MilitaryPersonnelFormPage = () => {
         last_name: '',
         rank: '',
         date_of_birth: null,
-        unit_id: '', // або pt_unit_id, відповідно до моделі MilitaryPersonnel
+        unit_id: '',
     });
     const [formError, setFormError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -52,9 +51,6 @@ const MilitaryPersonnelFormPage = () => {
             militaryPersonnelStore.clearSelectedPersonnel();
         }
         setFormError('');
-        return () => {
-            // militaryPersonnelStore.clearSelectedPersonnel();
-        }
     }, [personnelId]);
 
     useError(militaryPersonnelStore);
@@ -87,7 +83,6 @@ const MilitaryPersonnelFormPage = () => {
         const dataToSubmit = {
             ...personnel,
             date_of_birth: personnel.date_of_birth ? personnel.date_of_birth.format('YYYY-MM-DD') : null,
-            // Переконайтесь, що unit_id відправляється як число, якщо потрібно
             unit_id: personnel.unit_id ? parseInt(personnel.unit_id) : null
         };
 

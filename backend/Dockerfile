@@ -10,5 +10,5 @@ COPY . .
 
 EXPOSE 5001
 
-CMD ["npm", "seed"]
 CMD ["npm", "start"]
+CMD ["npm", "seed"]

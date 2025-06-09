@@ -39,7 +39,7 @@ db.TrainingSession.belongsTo(db.Unit, { foreignKey: { name: 'unitId', field: 'un
 
 // TrainingSession <-> Exercise (Many-to-Many through SessionExercise)
 db.TrainingSession.belongsToMany(db.Exercise, {
-    through: db.SessionExercise, // Явно вказуємо модель проміжної таблиці
+    through: db.SessionExercise,
     foreignKey: { name: 'sessionId', field: 'session_id' },
     otherKey: { name: 'exerciseId', field: 'exercise_id' },
     as: 'exercises'
@@ -54,7 +54,7 @@ db.Exercise.belongsToMany(db.TrainingSession, {
 db.TrainingSession.hasMany(db.SessionExercise, { foreignKey: { name: 'sessionId', field: 'session_id' }, as: 'sessionExerciseEntries' });
 db.SessionExercise.belongsTo(db.TrainingSession, { foreignKey: { name: 'sessionId', field: 'session_id' }, as: 'trainingSession' });
 
-db.Exercise.hasMany(db.SessionExercise, { foreignKey: { name: 'exerciseId', field: 'exercise_id' }, as: 'sessionExerciseLinks' }); // Змінив аліас щоб не було конфлікту
+db.Exercise.hasMany(db.SessionExercise, { foreignKey: { name: 'exerciseId', field: 'exercise_id' }, as: 'sessionExerciseLinks' });
 db.SessionExercise.belongsTo(db.Exercise, { foreignKey: { name: 'exerciseId', field: 'exercise_id' }, as: 'exercise' });
 
 
@@ -67,7 +67,7 @@ db.MilitaryPersonnel.hasMany(db.StandardAssessment, { foreignKey: { name: 'milit
 db.StandardAssessment.belongsTo(db.MilitaryPersonnel, { foreignKey: { name: 'militaryPersonId', field: 'military_person_id' }, as: 'militaryPersonnel' });
 
 // Exercise <-> StandardAssessment (One-to-Many)
-db.Exercise.hasMany(db.StandardAssessment, { foreignKey: { name: 'exerciseId', field: 'exercise_id' }, as: 'exerciseAssessments' }); // Змінив аліас
+db.Exercise.hasMany(db.StandardAssessment, { foreignKey: { name: 'exerciseId', field: 'exercise_id' }, as: 'exerciseAssessments' });
 db.StandardAssessment.belongsTo(db.Exercise, { foreignKey: { name: 'exerciseId', field: 'exercise_id' }, as: 'exerciseDetails' });
 
 module.exports = db;

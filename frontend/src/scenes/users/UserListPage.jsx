@@ -1,23 +1,22 @@
-// frontend/src/src/scenes/users/UserListPage.jsx
-import React, { useEffect } from 'react';
-import { Box, useTheme, CircularProgress, Typography } from "@mui/material";
-import { observer } from "mobx-react-lite";
+import React, {useEffect} from 'react';
+import {Box, useTheme, CircularProgress, Typography} from "@mui/material";
+import {observer} from "mobx-react-lite";
 import Header from "../../components/Header.jsx";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid.jsx";
 import TopBar from "../global/TopBar.jsx";
-import userStore from "../../stores/userStore.js"; // Розкоментовано
-import unitStore from "../../stores/unitStore.js"; // Розкоментовано
-import useError from "../../utils/useError.js"; // Розкоментовано
-import { UserRolesDisplay } from "../../utils/constants.js"; // Переконайтесь, що UserRolesDisplay оновлено
+import userStore from "../../stores/userStore.js";
+import unitStore from "../../stores/unitStore.js";
+import useError from "../../utils/useError.js";
+import {UserRolesDisplay} from "../../utils/constants.js";
 
 const UserListPage = () => {
     const theme = useTheme();
 
     const columns = [
-        { field: 'user_id', headerName: 'ID', width: 90 },
-        { field: 'last_name', headerName: 'Прізвище', flex: 1, cellClassName: "name-column--cell" },
-        { field: 'first_name', headerName: "Ім'я", flex: 1 },
-        { field: 'email', headerName: 'Email', flex: 1, },
+        {field: 'user_id', headerName: 'ID', width: 90},
+        {field: 'last_name', headerName: 'Прізвище', flex: 1, cellClassName: "name-column--cell"},
+        {field: 'first_name', headerName: "Ім'я", flex: 1},
+        {field: 'email', headerName: 'Email', flex: 1,},
         {
             field: 'role',
             headerName: 'Роль',
@@ -29,7 +28,7 @@ const UserListPage = () => {
             }
         },
         {
-            field: 'unit_id', // Назва поля згідно з новою моделлю User, що посилається на Unit
+            field: 'unit_id',
             headerName: 'Підрозділ',
             flex: 1.5,
             renderCell: (params) => {
@@ -44,7 +43,6 @@ const UserListPage = () => {
         if (userStore.users.length === 0 && !userStore.loading) {
             userStore.loadUsers();
         }
-        // unitStore вже завантажується в userStore.loadUsers, але можна перевірити
         if (unitStore.units.length === 0 && !unitStore.loading) {
             unitStore.loadUnits();
         }
@@ -57,18 +55,19 @@ const UserListPage = () => {
 
     if (isLoading && userStore.users.length === 0) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-                <CircularProgress />
-                <Typography sx={{ ml: 2 }}>Завантаження користувачів...</Typography>
+            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
+                <CircularProgress/>
+                <Typography sx={{ml: 2}}>Завантаження користувачів...</Typography>
             </Box>
         );
     }
 
     return (
-        <Box sx={{ m: "20px" }}>
+        <Box sx={{m: "20px"}}>
             <TopBar headerBox={
-                <Header title={"Користувачі Системи"} subtitle={"Керування обліковими записами користувачів модуля фіз. підготовки"} />
-            } />
+                <Header title={"Користувачі Системи"}
+                        subtitle={"Керування обліковими записами користувачів модуля фіз. підготовки"}/>
+            }/>
             <Box>
                 <CustomDataGrid
                     columns={columns}

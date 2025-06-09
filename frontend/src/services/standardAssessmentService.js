@@ -1,7 +1,6 @@
-// frontend/src/src/services/standardAssessmentService.js
-import apiClient from "../utils/apiClient.js"; //
+import apiClient from "../utils/apiClient.js";
 
-const API_URL = '/api/standard-assessments'; // Ендпоінт на бекенді
+const API_URL = '/api/standard-assessments';
 
 export async function getStandardAssessments(filters = {}) {
     try {
@@ -46,7 +45,7 @@ export async function updateStandardAssessment(assessmentId, assessmentData) {
 export async function deleteStandardAssessment(assessmentId) {
     try {
         const response = await apiClient.delete(`${API_URL}/${assessmentId}`);
-        return response.data; // Або response.status
+        return response.data;
     } catch (error) {
         console.error(`Error deleting standard assessment with id ${assessmentId}:`, error);
         throw error;

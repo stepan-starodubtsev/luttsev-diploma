@@ -1,18 +1,16 @@
-// frontend/src/src/scenes/locations/LocationFormPage.jsx
-import React, { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography, useTheme, Grid, Stack } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import { observer } from "mobx-react-lite";
+import React, {useState, useEffect} from 'react';
+import {Box, Button, TextField, Typography, useTheme, Grid, Stack} from "@mui/material";
+import {useNavigate, useParams} from "react-router-dom";
+import {observer} from "mobx-react-lite";
 import Header from "../../components/Header.jsx";
 import TopBar from "../global/TopBar.jsx";
 import useError from "../../utils/useError.js";
 import locationStore from "../../stores/locationStore.js";
-// import locationStore from "../../stores/locationStore";
-// import useError from "../../utils/useError.js";
+
 
 const LocationFormPage = () => {
     const theme = useTheme();
-    const { locationId } = useParams();
+    const {locationId} = useParams();
     const navigate = useNavigate();
 
     const [location, setLocation] = useState({
@@ -30,14 +28,14 @@ const LocationFormPage = () => {
                 locationStore.loadLocationById(locationId).then(data => setLocation(data));
             }
         } else {
-            setLocation({ name: '', description: '' /*, capacity: ''*/ });
+            setLocation({name: '', description: ''});
         }
     }, [locationId]);
 
     useError(locationStore);
 
     const handleChange = (e) => {
-        setLocation({ ...location, [e.target.name]: e.target.value });
+        setLocation({...location, [e.target.name]: e.target.value});
     };
 
     const validateForm = () => {
@@ -67,15 +65,15 @@ const LocationFormPage = () => {
     };
 
     return (
-        <Box sx={{ m: "20px" }}>
+        <Box sx={{m: "20px"}}>
             <TopBar headerBox={
                 <Header
                     title={locationId ? `Редагувати Локацію №${locationId}` : "Створити Нову Локацію"}
                     subtitle={locationId ? "Оновлення даних про місце проведення" : "Введення даних для нового місця проведення"}
                 />
-            } />
+            }/>
             <Box>
-                <Stack component="form" onSubmit={handleSubmit} spacing={3} sx={{ mt: 2 }}>
+                <Stack component="form" onSubmit={handleSubmit} spacing={3} sx={{mt: 2}}>
                     <TextField
                         label="Назва локації"
                         name="name"

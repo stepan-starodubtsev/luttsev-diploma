@@ -1,7 +1,6 @@
-// frontend/src/src/services/exerciseService.js
-import apiClient from "../utils/apiClient.js"; //
+import apiClient from "../utils/apiClient.js";
 
-const API_URL = '/api/exercises'; // Припускаємо, що такий ендпоінт буде на бекенді
+const API_URL = '/api/exercises';
 
 export async function getExercises() {
     try {
@@ -46,7 +45,7 @@ export async function updateExercise(exerciseId, exerciseData) {
 export async function deleteExercise(exerciseId) {
     try {
         const response = await apiClient.delete(`${API_URL}/${exerciseId}`);
-        return response.data; // Або response.status, якщо бекенд повертає тільки статус
+        return response.data;
     } catch (error) {
         console.error(`Error deleting exercise with id ${exerciseId}:`, error);
         throw error;

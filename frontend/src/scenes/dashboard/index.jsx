@@ -1,24 +1,18 @@
-// frontend/src/src/scenes/dashboard/ProfileForm.jsx
 import React from 'react';
 import {observer} from 'mobx-react-lite';
 import Header from "../../components/Header.jsx";
 import {Box, Grid, useTheme} from "@mui/material";
 
-// Компоненти статистики
 import TotalMilitaryPersonnelStat from "../../components/Charts/analytics/TotalMilitaryPersonnelStat.jsx";
 import WeeklyTrainingSessionsStat from "../../components/Charts/analytics/WeeklyTrainingSessionsStat.jsx";
 import CoveredUnitsStat from "../../components/Charts/analytics/CoveredUnitsStat.jsx";
 
-// Нові компоненти графіків
 import SessionTypePieChart from "../../components/Charts/SessionTypePieChart.jsx";
 import PersonnelByUnitPieChart from "../../components/Charts/PersonnelByUnitPieChart.jsx";
 import SessionsByLocationPieChart from "../../components/Charts/SessionsByLocationPieChart.jsx";
 import ScoreDistributionBarChart from "../../components/Charts/ScoreDistributionBarChart.jsx";
 import TopBar from "../global/TopBar.jsx";
 import PerformanceTrendChart from "../../components/Charts/PerformanceTrendChart.jsx";
-
-// TopBar тепер в App.jsx, тому тут він не потрібен
-// import TopBar from "../global/TopBar.jsx";
 
 const Dashboard = observer(() => {
     const theme = useTheme();
@@ -28,7 +22,7 @@ const Dashboard = observer(() => {
             <TopBar headerBox={
                 <Header title={"Головна панель"} subtitle={"Статистика"}/>
             }/>
-            <Grid container spacing={2} mb={3}> {/* Змінив spacing та mb */}
+            <Grid container spacing={2} mb={3}>
                 <Grid item size={4}>
                     <TotalMilitaryPersonnelStat/>
                 </Grid>

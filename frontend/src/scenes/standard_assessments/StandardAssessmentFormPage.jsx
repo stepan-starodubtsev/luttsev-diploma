@@ -1,24 +1,23 @@
-// frontend/src/src/scenes/standard_assessments/StandardAssessmentFormPage.jsx
-import React, { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography, useTheme, Grid, Stack, MenuItem, CircularProgress } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import { observer } from "mobx-react-lite";
+import React, {useState, useEffect} from 'react';
+import {Box, Button, TextField, Typography, useTheme, Grid, Stack, MenuItem, CircularProgress} from "@mui/material";
+import {useNavigate, useParams} from "react-router-dom";
+import {observer} from "mobx-react-lite";
 import Header from "../../components/Header.jsx";
 import TopBar from "../global/TopBar.jsx";
-import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import {LocalizationProvider, DateTimePicker} from '@mui/x-date-pickers';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/uk';
-import standardAssessmentStore from "../../stores/standardAssessmentStore"; // Розкоментовано
-import trainingSessionStore from "../../stores/trainingSessionStore"; // Розкоментовано
-import militaryPersonnelStore from "../../stores/militaryPersonnelStore"; // Розкоментовано
-import exerciseStore from "../../stores/exerciseStore"; // Розкоментовано
-import useError from "../../utils/useError.js"; // Розкоментовано
-import { ScoreTypes } from "../../utils/constants.js"; // Розкоментовано та переконайтесь, що він є
+import standardAssessmentStore from "../../stores/standardAssessmentStore";
+import trainingSessionStore from "../../stores/trainingSessionStore";
+import militaryPersonnelStore from "../../stores/militaryPersonnelStore";
+import exerciseStore from "../../stores/exerciseStore";
+import useError from "../../utils/useError.js";
+import {ScoreTypes} from "../../utils/constants.js";
 
 const StandardAssessmentFormPage = () => {
     const theme = useTheme();
-    const { assessmentId } = useParams();
+    const {assessmentId} = useParams();
     const navigate = useNavigate();
     dayjs.locale('uk');
 
@@ -37,8 +36,7 @@ const StandardAssessmentFormPage = () => {
 
     useEffect(() => {
         if (trainingSessionStore.sessions.length === 0 && !trainingSessionStore.loading) {
-            // Завантажуємо тільки сесії типу STANDARDS_ASSESSMENT
-            trainingSessionStore.loadSessions({ session_type: 'STANDARDS_ASSESSMENT' });
+            trainingSessionStore.loadSessions({session_type: 'STANDARDS_ASSESSMENT'});
         }
         if (militaryPersonnelStore.personnelList.length === 0 && !militaryPersonnelStore.loading) {
             militaryPersonnelStore.loadPersonnel();
@@ -61,13 +59,17 @@ const StandardAssessmentFormPage = () => {
                 setIsLoading(false);
             }).catch(() => setIsLoading(false));
         } else {
-            setAssessment({ session_id: '', military_person_id: '', exercise_id: '', score: '', assessment_datetime: dayjs(), notes: '' });
+            setAssessment({
+                session_id: '',
+                military_person_id: '',
+                exercise_id: '',
+                score: '',
+                assessment_datetime: dayjs(),
+                notes: ''
+            });
             standardAssessmentStore.clearSelectedAssessment();
         }
         setFormError('');
-        return () => {
-            // standardAssessmentStore.clearSelectedAssessment();
-        }
     }, [assessmentId]);
 
     useError(standardAssessmentStore);
@@ -77,11 +79,11 @@ const StandardAssessmentFormPage = () => {
 
 
     const handleChange = (e) => {
-        setAssessment({ ...assessment, [e.target.name]: e.target.value });
+        setAssessment({...assessment, [e.target.name]: e.target.value});
     };
 
     const handleDateTimeChange = (newDateTime) => {
-        setAssessment({ ...assessment, assessment_datetime: newDateTime });
+        setAssessment({...assessment, assessment_datetime: newDateTime});
     };
 
     const validateForm = () => {
@@ -119,27 +121,27 @@ const StandardAssessmentFormPage = () => {
         }
     };
 
-    if (isLoading && assessmentId) { // Індикатор завантаження для редагування
+    if (isLoading && assessmentId) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-                <CircularProgress />
-                <Typography sx={{ ml: 2 }}>Завантаження даних оцінки...</Typography>
+            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
+                <CircularProgress/>
+                <Typography sx={{ml: 2}}>Завантаження даних оцінки...</Typography>
             </Box>
         );
     }
 
 
     return (
-        <Box sx={{ m: "20px" }}>
+        <Box sx={{m: "20px"}}>
             <TopBar headerBox={
                 <Header
                     title={assessmentId ? `Редагувати Оцінку №${assessmentId}` : "Додати Нову Оцінку"}
                     subtitle={assessmentId ? "Оновлення даних про оцінку за норматив" : "Введення даних нової оцінки"}
                 />
-            } />
+            }/>
             <Box>
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="uk">
-                    <Stack component="form" onSubmit={handleSubmit} spacing={2} sx={{ mt: 2 }}>
+                    <Stack component="form" onSubmit={handleSubmit} spacing={2} sx={{mt: 2}}>
                         <Grid container spacing={2}>
                             <Grid item size={4}>
                                 <TextField
@@ -224,7 +226,7 @@ const StandardAssessmentFormPage = () => {
                                     label="Дата та час оцінки"
                                     value={assessment.assessment_datetime}
                                     onChange={handleDateTimeChange}
-                                    slotProps={{ textField: { fullWidth: true, required: true, disabled: isLoading } }}
+                                    slotProps={{textField: {fullWidth: true, required: true, disabled: isLoading}}}
                                     format="DD.MM.YYYY HH:mm"
                                     disabled={isLoading}
                                 />
@@ -236,17 +238,20 @@ const StandardAssessmentFormPage = () => {
                                     value={assessment.notes || ''}
                                     onChange={handleChange}
                                     fullWidth
-                                    
+
                                     rows={3}
                                     disabled={isLoading}
                                 />
                             </Grid>
                         </Grid>
-                        {formError && <Typography color="error" sx={{ mt: 1 }}>{formError}</Typography>}
-                        {standardAssessmentStore.error && <Typography color="error" sx={{ mt: 1 }}>{standardAssessmentStore.error}</Typography>}
+                        {formError && <Typography color="error" sx={{mt: 1}}>{formError}</Typography>}
+                        {standardAssessmentStore.error &&
+                            <Typography color="error" sx={{mt: 1}}>{standardAssessmentStore.error}</Typography>}
                         <Box display="flex" justifyContent="flex-end" mt={2}>
-                            <Button type="submit" variant="contained" color="secondary" disabled={isLoading || standardAssessmentStore.loading || areRelatedStoresLoading}>
-                                {isLoading || standardAssessmentStore.loading ? <CircularProgress size={24} /> : (assessmentId ? "Зберегти Зміни" : "Додати Оцінку")}
+                            <Button type="submit" variant="contained" color="secondary"
+                                    disabled={isLoading || standardAssessmentStore.loading || areRelatedStoresLoading}>
+                                {isLoading || standardAssessmentStore.loading ?
+                                    <CircularProgress size={24}/> : (assessmentId ? "Зберегти Зміни" : "Додати Оцінку")}
                             </Button>
                         </Box>
                     </Stack>

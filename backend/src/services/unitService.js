@@ -29,7 +29,6 @@ module.exports = {
 
     async getUnitById(id) {
         const unitInstance = await Unit.findByPk(id, {
-            // include: [{ model: User, as: 'users' }]
         });
         if (!unitInstance) {
             throw new AppError(`Unit with ID ${id} not found`, 404);
@@ -53,18 +52,16 @@ module.exports = {
     },
 
     async deleteUnit(id) {
-        const unitInstance = await Unit.findByPk(id); // Використовуємо інше ім'я змінної
+        const unitInstance = await Unit.findByPk(id);
         if (!unitInstance) {
             throw new AppError(`Unit with ID ${id} not found`, 404);
         }
 
         const transaction = await sequelize.transaction();
         try {
-            // Використовуємо правильне ім'я поля 'unit_id'
             const usersInUnit = await userService.getAllUsers({ unit_id: id });
-            if (usersInUnit && usersInUnit.length > 0) { // Перевірка на порожній масив
+            if (usersInUnit && usersInUnit.length > 0) {
                 for (const user of usersInUnit) {
-                    // Передаємо transaction, якщо updateUser його підтримує
                     await userService.updateUser(user.user_id, { unit_id: null }, { transaction });
                 }
             }

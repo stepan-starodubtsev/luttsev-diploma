@@ -1,4 +1,3 @@
-// frontend/src/src/scenes/profile/index.jsx
 import {
     Box,
     Button,
@@ -17,15 +16,15 @@ import {
 import {observer} from "mobx-react-lite";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityOnIcon from '@mui/icons-material/Visibility';
-import {tokens} from "../../theme.js"; //
-import Header from "../../components/Header.jsx"; //
+import {tokens} from "../../theme.js";
+import Header from "../../components/Header.jsx";
 import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom"; // useParams тут не потрібен
-import useError from "../../utils/useError.js"; //
-import TopBar from "../global/TopBar.jsx"; //
-import {authStore} from "../../stores/authStore.js"; //
-import userStore from "../../stores/userStore.js"; // Для оновлення користувача
-import {UserRolesDisplay} from "../../utils/constants.js"; // Для відображення ролі
+import {useNavigate} from "react-router-dom";
+import useError from "../../utils/useError.js";
+import TopBar from "../global/TopBar.jsx";
+import {authStore} from "../../stores/authStore.js";
+import userStore from "../../stores/userStore.js";
+import {UserRolesDisplay} from "../../utils/constants.js";
 
 const ProfileForm = () => {
     const theme = useTheme();
@@ -36,7 +35,7 @@ const ProfileForm = () => {
         first_name: '',
         last_name: '',
         email: '',
-        password: '', // Для нового пароля
+        password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
     const [formError, setFormError] = useState('');
@@ -48,15 +47,14 @@ const ProfileForm = () => {
                 first_name: authStore.user.first_name || '',
                 last_name: authStore.user.last_name || '',
                 email: authStore.user.email || '',
-                // email: authStore.user.email || '', // Якщо б було поле email
-                password: '', // Пароль завжди порожній при завантаженні
-                role: authStore.user.role || '', // Для відображення
-                unit_id: authStore.user.unit_id || '', // Для відображення
+                password: '',
+                role: authStore.user.role || '',
+                unit_id: authStore.user.unit_id || '',
             });
         }
-    }, [authStore.user]); // Залежність від authStore.user
+    }, [authStore.user]);
 
-    useError(userStore); // Для відображення помилок зі стору користувачів
+    useError(userStore);
 
     const handleChange = (e) => {
         setProfileData({...profileData, [e.target.name]: e.target.value});
@@ -104,7 +102,6 @@ const ProfileForm = () => {
             setFormError("Некоректний формат email.");
             return false;
         }
-        // Додаткова валідація для пароля, якщо він введений (наприклад, мінімальна довжина)
         if (profileData.password && profileData.password.length < 6) {
             setFormError("Пароль має містити щонайменше 6 символів.");
             return false;
@@ -169,9 +166,9 @@ const ProfileForm = () => {
                             <TextField
                                 label="Роль"
                                 name="role"
-                                value={userRoleLabel} // Показуємо label ролі
+                                value={userRoleLabel}
                                 fullWidth
-                                disabled // Роль не редагується користувачем
+                                disabled
                             />
                         </Grid>
                         <Grid item size={6}>

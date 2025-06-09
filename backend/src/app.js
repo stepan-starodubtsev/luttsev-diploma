@@ -1,77 +1,3 @@
-// const express = require('express');
-// const app = express();
-// const cors = require('cors');
-// const swaggerUi = require('swagger-ui-express');
-// const fs = require('fs');
-// const path = require('path');
-//
-// // Middleware
-// const roleMiddleware = require('./middleware/roleMiddleware');
-// const { ROLES } = require('./config/constants');
-//
-// // Routers
-// const authRouter = require('./routes/authRouter');
-// const userRouter = require('./routes/userRouter');
-// const unitRouter = require('./routes/unitRouter');
-// const militaryPersonnelRouter = require('./routes/militaryPersonnelRouter');
-// const exerciseRouter = require('./routes/exerciseRouter');
-// const locationRouter = require('./routes/locationRouter');
-// const trainingSessionRouter = require('./routes/trainingSessionRouter');
-// const sessionExerciseRouter = require('./routes/sessionExerciseRouter');
-// const standardAssessmentRouter = require('./routes/standardAssessmentRouter');
-//
-// app.use(express.json());
-// app.use(cors({
-//     origin: '*',
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-//     allowedHeaders: ['Content-Type', 'Authorization']
-// }));
-//
-// const swaggerDocument = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'swagger.json'), 'utf8'));
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-//
-// // --- Public Routes ---
-// app.use('/api/auth', authRouter); // Залишається публічним
-//
-// // --- Protected Routes (authMiddleware тимчасово закоментовано/видалено звідси) ---
-// // app.use(authMiddleware); // ГЛОБАЛЬНИЙ ЗАХИСТ ЗАКОМЕНТОВАНО
-//
-// // --- Role-Based Access (authMiddleware закоментовано і тут) ---
-//
-// app.use('/api/users',  userRouter); // authMiddleware закоментовано
-//
-// // const checkUnitsAccess = ... ; // Якщо використовуєте, залиште
-// app.use('/api/units',  unitRouter); // authMiddleware закоментовано
-//
-// app.use('/api/military-personnel',  militaryPersonnelRouter);
-//
-// app.use('/api/exercises', exerciseRouter);
-//
-// app.use('/api/locations', locationRouter);
-//
-// app.use('/api/training-sessions',  trainingSessionRouter);
-//
-// app.use('/api/session-exercises',   sessionExerciseRouter);
-//
-// app.use('/api/standard-assessments', standardAssessmentRouter);
-//
-//
-// app.get('/api', (req, res) => res.send('Physical Training Module API is running... (AUTH TEMPORARILY DISABLED)'));
-//
-// app.use((error, req, res, next) => {
-//     console.error("Error Handler:", error.name, error.message, error.stack);
-//     const statusCode = error.statusCode || 500;
-//     const message = error.message || "Internal Server Error";
-//     res.status(statusCode).json({
-//         status: statusCode,
-//         message: message,
-//         ...(process.env.NODE_ENV === 'development' && {stack: error.stack})
-//     });
-// });
-//
-// module.exports = app;
-
-
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -116,7 +42,7 @@ app.use(authMiddleware);
 // --- Role-Based Access ---
 
 const usersPermissions = {
-    [ROLES.ADMIN]: { methods: '*' }, // Адмін може все
+    [ROLES.ADMIN]: { methods: '*' },
     [ROLES.DEPARTMENT_EMPLOYEE]: { methods: ['GET', 'PUT'] },
     [ROLES.COMMANDER]: { methods: ['GET', 'PUT'] },
     [ROLES.INSTRUCTOR]: { methods: ['GET', 'PUT'] }

@@ -1,4 +1,3 @@
-// frontend/src/src/scenes/units/UnitFormPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Typography, useTheme, Grid, Stack, CircularProgress } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -59,7 +58,6 @@ const UnitFormPage = () => {
         }
         setIsLoading(true);
         setFormError('');
-        // dataToSubmit тепер не містить commander_id
         const dataToSubmit = { unit_name: unit.unit_name };
 
         try {

@@ -1,4 +1,3 @@
-// frontend/src/src/stores/militaryPersonnelStore.js
 import { makeAutoObservable, runInAction, flow } from 'mobx';
 import {
     getMilitaryPersonnel,
@@ -7,17 +6,17 @@ import {
     updateMilitaryPersonnel,
     deleteMilitaryPersonnel
 } from '../services/militaryPersonnelService.js';
-import unitStore from "./unitStore.js"; // Для завантаження підрозділів
+import unitStore from "./unitStore.js";
 
 class MilitaryPersonnelStore {
-    personnelList = []; // Перейменовано з 'personnel' для уникнення конфлікту з можливою властивістю
+    personnelList = [];
     selectedPersonnel = null;
     loading = false;
     error = null;
 
     constructor() {
         makeAutoObservable(this, {
-            loadPersonnel: flow, // Змінено для узгодженості
+            loadPersonnel: flow,
             loadPersonnelById: flow,
             addPersonnel: flow,
             updatePersonnel: flow,
@@ -29,8 +28,7 @@ class MilitaryPersonnelStore {
         this.loading = true;
         this.error = null;
         try {
-            // Завантажуємо підрозділи, якщо вони ще не завантажені,
-            // оскільки вони можуть знадобитися для відображення в таблиці або фільтрації
+
             if (unitStore.units.length === 0 && !unitStore.loading) {
                 yield unitStore.loadUnits();
             }

@@ -1,7 +1,6 @@
-// frontend/src/src/services/trainingSessionService.js
-import apiClient from "../utils/apiClient.js"; //
+import apiClient from "../utils/apiClient.js";
 
-const API_URL = '/api/training-sessions'; // Ендпоінт на бекенді
+const API_URL = '/api/training-sessions';
 
 export async function getTrainingSessions(filters = {}) {
     try {
@@ -46,7 +45,7 @@ export async function updateTrainingSession(sessionId, sessionData) {
 export async function deleteTrainingSession(sessionId) {
     try {
         const response = await apiClient.delete(`${API_URL}/${sessionId}`);
-        return response.data; // Або response.status
+        return response.data;
     } catch (error) {
         console.error(`Error deleting training session with id ${sessionId}:`, error);
         throw error;

@@ -1,7 +1,6 @@
-// frontend/src/src/services/locationService.js
-import apiClient from "../utils/apiClient.js"; //
+import apiClient from "../utils/apiClient.js";
 
-const API_URL = '/api/locations'; // Припускаємо, що такий ендпоінт буде на бекенді
+const API_URL = '/api/locations';
 
 export async function getLocations() {
     try {
@@ -47,7 +46,7 @@ export async function updateLocation(locationId, locationData) {
 export async function deleteLocation(locationId) {
     try {
         const response = await apiClient.delete(`${API_URL}/${locationId}`);
-        return response.data; // Або response.status
+        return response.data;
     } catch (error) {
         console.error(`Error deleting location with id ${locationId}:`, error);
         throw error;

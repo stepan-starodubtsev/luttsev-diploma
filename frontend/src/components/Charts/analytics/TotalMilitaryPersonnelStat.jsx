@@ -1,10 +1,9 @@
-// frontend/src/src/components/Charts/analytics/TotalMilitaryPersonnelStat.jsx
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Typography, useTheme } from '@mui/material';
-import StatBox from '../StatBox/StatBox.jsx'; // Ваш існуючий StatBox
+import StatBox from '../StatBox/StatBox.jsx';
 import GroupIcon from '@mui/icons-material/Group';
-import militaryPersonnelStore from '../../../stores/militaryPersonnelStore'; // Новий стор
+import militaryPersonnelStore from '../../../stores/militaryPersonnelStore';
 import { tokens } from "../../../theme.js";
 
 const TotalMilitaryPersonnelStat = observer(() => {

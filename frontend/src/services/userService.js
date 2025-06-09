@@ -1,9 +1,8 @@
-// frontend/src/src/services/userService.js
-import apiClient from "../utils/apiClient.js"; //
+import apiClient from "../utils/apiClient.js";
 
-const API_URL = '/api/users'; // Ендпоінт для нової моделі User
+const API_URL = '/api/users';
 
-export async function getUsers(filters = {}) { // Додано можливість фільтрації
+export async function getUsers(filters = {}) {
     try {
         const response = await apiClient.get(API_URL, { params: filters });
         return response.data;
@@ -46,7 +45,7 @@ export async function updateUser(userId, userData) {
 export async function deleteUser(userId) {
     try {
         const response = await apiClient.delete(`${API_URL}/${userId}`);
-        return response.data; // Або response.status
+        return response.data;
     } catch (error) {
         console.error(`Error deleting user with id ${userId}:`, error);
         throw error;

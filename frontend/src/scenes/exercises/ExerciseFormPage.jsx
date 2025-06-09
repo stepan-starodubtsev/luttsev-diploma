@@ -1,16 +1,15 @@
-// frontend/src/src/scenes/exercises/ExerciseFormPage.jsx
-import React, { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography, useTheme, Grid, Stack, CircularProgress } from "@mui/material"; // Додано CircularProgress
-import { useNavigate, useParams } from "react-router-dom";
-import { observer } from "mobx-react-lite";
+import React, {useState, useEffect} from 'react';
+import {Box, Button, TextField, Typography, useTheme, Grid, Stack, CircularProgress} from "@mui/material";
+import {useNavigate, useParams} from "react-router-dom";
+import {observer} from "mobx-react-lite";
 import Header from "../../components/Header.jsx";
 import TopBar from "../global/TopBar.jsx";
-import exerciseStore from "../../stores/exerciseStore"; // Розкоментовано
-import useError from "../../utils/useError.js"; // Розкоментовано
+import exerciseStore from "../../stores/exerciseStore";
+import useError from "../../utils/useError.js";
 
 const ExerciseFormPage = () => {
     const theme = useTheme();
-    const { exerciseId } = useParams();
+    const {exerciseId} = useParams();
     const navigate = useNavigate();
 
     const [exercise, setExercise] = useState({
@@ -18,7 +17,7 @@ const ExerciseFormPage = () => {
         description: '',
     });
     const [formError, setFormError] = useState('');
-    const [isLoading, setIsLoading] = useState(false); // Локальний стан завантаження для форми
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (exerciseId) {
@@ -32,22 +31,16 @@ const ExerciseFormPage = () => {
                 setIsLoading(false);
             }).catch(() => setIsLoading(false));
         } else {
-            // Очищаємо форму для створення нової вправи
-            setExercise({ exercise_name: '', description: '' });
-            exerciseStore.clearSelectedExercise(); // Якщо є такий метод у сторі
+            setExercise({exercise_name: '', description: ''});
+            exerciseStore.clearSelectedExercise();
         }
-        // Очищаємо помилку форми при зміні ID або першому завантаженні
         setFormError('');
-        return () => {
-            // Очищення при розмонтуванні компонента, якщо потрібно
-            // exerciseStore.clearSelectedExercise();
-        }
     }, [exerciseId]);
 
     useError(exerciseStore);
 
     const handleChange = (e) => {
-        setExercise({ ...exercise, [e.target.name]: e.target.value });
+        setExercise({...exercise, [e.target.name]: e.target.value});
     };
 
     const validateForm = () => {
@@ -74,33 +67,31 @@ const ExerciseFormPage = () => {
             }
             navigate('/exercises');
         } catch (error) {
-            // помилка вже повинна бути в exerciseStore.error та оброблена useError
-            // але можна додати специфічну для форми
             setFormError(exerciseStore.error || "Помилка збереження вправи");
         } finally {
             setIsLoading(false);
         }
     };
 
-    if (isLoading && exerciseId) { // Показуємо завантаження тільки при редагуванні існуючої
+    if (isLoading && exerciseId) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-                <CircularProgress />
-                <Typography sx={{ ml: 2 }}>Завантаження даних вправи...</Typography>
+            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
+                <CircularProgress/>
+                <Typography sx={{ml: 2}}>Завантаження даних вправи...</Typography>
             </Box>
         );
     }
 
     return (
-        <Box sx={{ m: "20px" }}>
+        <Box sx={{m: "20px"}}>
             <TopBar headerBox={
                 <Header
                     title={exerciseId ? `Редагувати Вправу №${exercise.exercise_name || exerciseId}` : "Створити Нову Вправу"}
                     subtitle={exerciseId ? "Оновлення даних про фізичну вправу" : "Введення даних для нової фізичної вправи"}
                 />
-            } />
+            }/>
             <Box>
-                <Stack component="form" onSubmit={handleSubmit} spacing={3} sx={{ mt: 2 }}>
+                <Stack component="form" onSubmit={handleSubmit} spacing={3} sx={{mt: 2}}>
                     <TextField
                         label="Назва вправи"
                         name="exercise_name"
@@ -115,18 +106,20 @@ const ExerciseFormPage = () => {
                     <TextField
                         label="Опис вправи"
                         name="description"
-                        value={exercise.description || ''} // || '' щоб уникнути uncontrolled input
+                        value={exercise.description || ''}
                         onChange={handleChange}
                         fullWidth
-                        
+
                         rows={4}
                         disabled={isLoading}
                     />
                     {formError && !formError.includes("Назва") && <Typography color="error">{formError}</Typography>}
-                    {exerciseStore.error && <Typography color="error" sx={{ mt: 1 }}>{exerciseStore.error}</Typography>}
+                    {exerciseStore.error && <Typography color="error" sx={{mt: 1}}>{exerciseStore.error}</Typography>}
                     <Box display="flex" justifyContent="flex-end" mt={2}>
-                        <Button type="submit" variant="contained" color="secondary" disabled={isLoading || exerciseStore.loading}>
-                            {isLoading || exerciseStore.loading ? <CircularProgress size={24} /> : (exerciseId ? "Зберегти Зміни" : "Створити Вправу")}
+                        <Button type="submit" variant="contained" color="secondary"
+                                disabled={isLoading || exerciseStore.loading}>
+                            {isLoading || exerciseStore.loading ?
+                                <CircularProgress size={24}/> : (exerciseId ? "Зберегти Зміни" : "Створити Вправу")}
                         </Button>
                     </Box>
                 </Stack>

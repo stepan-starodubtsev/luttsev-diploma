@@ -33,12 +33,10 @@ import StandardAssessmentFormPage from "./scenes/standard_assessments/StandardAs
 const App = observer(() => {
     const [theme, colorMode] = useMode();
 
-    // Використовуємо ROLES напряму з constants.js, які мають бути оновлені
-    // ROLES.ADMIN, ROLES.COMMANDER, ROLES.DEPARTMENT_EMPLOYEE, ROLES.INSTRUCTOR
+
     const allAuthenticatedRoles = Object.values(ROLES);
     const adminOnly = [ROLES.ADMIN];
     const departmentAndAdmin = [ROLES.ADMIN, ROLES.DEPARTMENT_EMPLOYEE];
-    // Визначте інші групи ролей за потребою
     const instructorsAndAbove = [ROLES.ADMIN, ROLES.COMMANDER, ROLES.DEPARTMENT_EMPLOYEE, ROLES.INSTRUCTOR];
     const commandersAndAdminDept = [ROLES.ADMIN, ROLES.COMMANDER, ROLES.DEPARTMENT_EMPLOYEE];
 

@@ -1,4 +1,3 @@
-// frontend/src/src/stores/unitStore.js
 import { makeAutoObservable, runInAction, flow } from 'mobx';
 import {
     getUnits,
@@ -6,8 +5,7 @@ import {
     createUnit,
     updateUnit,
     deleteUnit
-} from '../services/unitService.js'; // Переконайтесь, що шлях правильний
-import userStore from "./userStore.js"; // Якщо потрібно завантажувати командирів
+} from '../services/unitService.js';
 
 class UnitStore {
     units = [];
@@ -29,10 +27,6 @@ class UnitStore {
         this.loading = true;
         this.error = null;
         try {
-            // Якщо для відображення підрозділів потрібні дані командирів
-            // if (userStore.users.length === 0 && !userStore.loading) {
-            //     yield userStore.loadUsers({ role: 'COMMANDER' }); // Або інша відповідна роль
-            // }
             const data = yield getUnits();
             runInAction(() => {
                 this.units = data || [];
@@ -99,7 +93,7 @@ class UnitStore {
         try {
             const updated = yield updateUnit(unitId, unitData);
             runInAction(() => {
-                const index = this.units.findIndex(u => u.unit_id === unitId); // Використовуємо unit_id
+                const index = this.units.findIndex(u => u.unit_id === unitId);
                 if (index !== -1) {
                     this.units[index] = updated;
                 }
@@ -127,7 +121,7 @@ class UnitStore {
         const originalUnits = [...this.units];
         try {
             runInAction(() => {
-                this.units = this.units.filter(u => u.unit_id !== unitId); // Використовуємо unit_id
+                this.units = this.units.filter(u => u.unit_id !== unitId);
             });
             yield deleteUnit(unitId);
         } catch (error) {

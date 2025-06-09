@@ -28,7 +28,7 @@ module.exports = {
         const assessments = await StandardAssessment.findAll({
             where: filters,
             order: [
-                ['assessment_id', 'ASC'] // Сортувати за ID користувача за зростанням
+                ['assessment_id', 'ASC']
             ]
         });
         if (!assessments || assessments.length === 0) {

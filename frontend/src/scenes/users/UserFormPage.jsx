@@ -1,20 +1,34 @@
-// frontend/src/src/scenes/users/UserFormPage.jsx
-import React, { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography, useTheme, Grid, Stack, MenuItem, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, CircularProgress } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import { observer } from "mobx-react-lite";
+import React, {useState, useEffect} from 'react';
+import {
+    Box,
+    Button,
+    TextField,
+    Typography,
+    useTheme,
+    Grid,
+    Stack,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    InputAdornment,
+    IconButton,
+    CircularProgress
+} from "@mui/material";
+import {useNavigate, useParams} from "react-router-dom";
+import {observer} from "mobx-react-lite";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityOnIcon from '@mui/icons-material/Visibility';
 import Header from "../../components/Header.jsx";
 import TopBar from "../global/TopBar.jsx";
-import userStore from "../../stores/userStore.js"; // Розкоментовано
-import unitStore from "../../stores/unitStore.js"; // Розкоментовано
-import useError from "../../utils/useError.js"; // Розкоментовано
-import { UserRolesDisplay } from "../../utils/constants.js"; // Переконайтесь, що UserRolesDisplay оновлено
+import userStore from "../../stores/userStore.js";
+import unitStore from "../../stores/unitStore.js";
+import useError from "../../utils/useError.js";
+import {UserRolesDisplay} from "../../utils/constants.js";
 
 const UserFormPage = () => {
     const theme = useTheme();
-    const { userId } = useParams();
+    const {userId} = useParams();
     const navigate = useNavigate();
 
     const [user, setUser] = useState({
@@ -23,11 +37,11 @@ const UserFormPage = () => {
         email: '',
         role: '',
         password: '',
-        unit_id: '', // Назва поля згідно з новою моделлю User
+        unit_id: '',
     });
     const [showPassword, setShowPassword] = useState(false);
     const [formError, setFormError] = useState('');
-    const [isLoading, setIsLoading] = useState(false); // Локальний стан для форми
+    const [isLoading, setIsLoading] = useState(false);
     const areRelatedStoresLoading = unitStore.loading;
 
     useEffect(() => {
@@ -38,27 +52,24 @@ const UserFormPage = () => {
             setIsLoading(true);
             userStore.loadUserById(userId).then((data) => {
                 if (data) {
-                    setUser({ ...data, password: '' }); // Пароль не завантажуємо для редагування
+                    setUser({...data, password: ''});
                 } else {
                     setFormError("Не вдалося завантажити дані користувача.");
                 }
                 setIsLoading(false);
             }).catch(() => setIsLoading(false));
         } else {
-            setUser({ first_name: '', last_name: '', email: '', role: '', password: '', unit_id: '' });
+            setUser({first_name: '', last_name: '', email: '', role: '', password: '', unit_id: ''});
             userStore.clearSelectedUser();
         }
         setFormError('');
-        return () => {
-            // userStore.clearSelectedUser();
-        }
     }, [userId]);
 
     useError(userStore);
     useError(unitStore);
 
     const handleChange = (e) => {
-        setUser({ ...user, [e.target.name]: e.target.value });
+        setUser({...user, [e.target.name]: e.target.value});
     };
 
     const togglePasswordVisibility = () => {
@@ -90,11 +101,11 @@ const UserFormPage = () => {
         }
         setIsLoading(true);
         setFormError('');
-        const dataToSubmit = { ...user };
+        const dataToSubmit = {...user};
         if (!dataToSubmit.password) {
             delete dataToSubmit.password;
         }
-        if (dataToSubmit.unit_id === '' || dataToSubmit.unit_id === null) { // Перевіряємо на null також
+        if (dataToSubmit.unit_id === '' || dataToSubmit.unit_id === null) {
             dataToSubmit.unit_id = null;
         } else {
             dataToSubmit.unit_id = parseInt(dataToSubmit.unit_id);
@@ -115,37 +126,41 @@ const UserFormPage = () => {
         }
     };
 
-    if (isLoading && userId && !userStore.selectedUser) { // Індикатор завантаження для редагування
+    if (isLoading && userId && !userStore.selectedUser) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-                <CircularProgress />
-                <Typography sx={{ ml: 2 }}>Завантаження даних користувача...</Typography>
+            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
+                <CircularProgress/>
+                <Typography sx={{ml: 2}}>Завантаження даних користувача...</Typography>
             </Box>
         );
     }
 
     return (
-        <Box sx={{ m: "20px" }}>
+        <Box sx={{m: "20px"}}>
             <TopBar headerBox={
                 <Header
                     title={userId ? `Редагувати Користувача №${user.last_name || userId}` : "Створити Нового Користувача"}
                     subtitle={userId ? "Оновлення даних облікового запису" : "Створення нового облікового запису"}
                 />
-            } />
+            }/>
             <Box>
-                <Stack component="form" onSubmit={handleSubmit} spacing={2} sx={{ mt: 2 }}>
+                <Stack component="form" onSubmit={handleSubmit} spacing={2} sx={{mt: 2}}>
                     <Grid container spacing={2}>
                         <Grid item size={4}>
-                            <TextField label="Прізвище" name="last_name" value={user.last_name} onChange={handleChange} fullWidth required disabled={isLoading} />
+                            <TextField label="Прізвище" name="last_name" value={user.last_name} onChange={handleChange}
+                                       fullWidth required disabled={isLoading}/>
                         </Grid>
                         <Grid item size={4}>
-                            <TextField label="Ім'я" name="first_name" value={user.first_name} onChange={handleChange} fullWidth required disabled={isLoading} />
+                            <TextField label="Ім'я" name="first_name" value={user.first_name} onChange={handleChange}
+                                       fullWidth required disabled={isLoading}/>
                         </Grid>
                         <Grid item size={4}>
-                            <TextField label="Email" name="email" type="email" value={user.email} onChange={handleChange} fullWidth required disabled={isLoading} />
+                            <TextField label="Email" name="email" type="email" value={user.email}
+                                       onChange={handleChange} fullWidth required disabled={isLoading}/>
                         </Grid>
                         <Grid item size={4}>
-                            <TextField label="Роль" name="role" value={user.role || ''} onChange={handleChange} fullWidth select required disabled={isLoading}>
+                            <TextField label="Роль" name="role" value={user.role || ''} onChange={handleChange}
+                                       fullWidth select required disabled={isLoading}>
                                 <MenuItem value=""><em>Оберіть роль</em></MenuItem>
                                 {UserRolesDisplay.map((roleOption) => (
                                     <MenuItem key={roleOption.value} value={roleOption.value}>
@@ -156,7 +171,8 @@ const UserFormPage = () => {
                         </Grid>
                         <Grid item size={4}>
                             <FormControl fullWidth variant="outlined" disabled={isLoading}>
-                                <InputLabel htmlFor="password">Пароль {userId ? '(залиште порожнім, щоб не змінювати)' : ''}</InputLabel>
+                                <InputLabel
+                                    htmlFor="password">Пароль {userId ? '(залиште порожнім, щоб не змінювати)' : ''}</InputLabel>
                                 <OutlinedInput
                                     id="password"
                                     label={`Пароль ${userId ? '(залиште порожнім, щоб не змінювати)' : ''}`}
@@ -167,8 +183,9 @@ const UserFormPage = () => {
                                     required={!userId}
                                     endAdornment={
                                         <InputAdornment position="end">
-                                            <IconButton aria-label="toggle password visibility" onClick={togglePasswordVisibility} edge="end">
-                                                {showPassword ? <VisibilityOffIcon /> : <VisibilityOnIcon />}
+                                            <IconButton aria-label="toggle password visibility"
+                                                        onClick={togglePasswordVisibility} edge="end">
+                                                {showPassword ? <VisibilityOffIcon/> : <VisibilityOnIcon/>}
                                             </IconButton>
                                         </InputAdornment>
                                     }
@@ -194,11 +211,13 @@ const UserFormPage = () => {
                             </TextField>
                         </Grid>
                     </Grid>
-                    {formError && <Typography color="error" sx={{ mt: 1 }}>{formError}</Typography>}
-                    {userStore.error && <Typography color="error" sx={{ mt: 1 }}>{userStore.error}</Typography>}
+                    {formError && <Typography color="error" sx={{mt: 1}}>{formError}</Typography>}
+                    {userStore.error && <Typography color="error" sx={{mt: 1}}>{userStore.error}</Typography>}
                     <Box display="flex" justifyContent="flex-end" mt={2}>
-                        <Button type="submit" variant="contained" color="secondary" disabled={isLoading || userStore.loading || areRelatedStoresLoading}>
-                            {isLoading || userStore.loading ? <CircularProgress size={24} /> : (userId ? "Зберегти Зміни" : "Створити Користувача")}
+                        <Button type="submit" variant="contained" color="secondary"
+                                disabled={isLoading || userStore.loading || areRelatedStoresLoading}>
+                            {isLoading || userStore.loading ?
+                                <CircularProgress size={24}/> : (userId ? "Зберегти Зміни" : "Створити Користувача")}
                         </Button>
                     </Box>
                 </Stack>

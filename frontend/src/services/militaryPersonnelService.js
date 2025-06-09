@@ -1,7 +1,6 @@
-// frontend/src/src/services/militaryPersonnelService.js
-import apiClient from "../utils/apiClient.js"; //
+import apiClient from "../utils/apiClient.js";
 
-const API_URL = '/api/military-personnel'; // Ендпоінт на бекенді
+const API_URL = '/api/military-personnel';
 
 export async function getMilitaryPersonnel(filters = {}) {
     try {
@@ -46,7 +45,7 @@ export async function updateMilitaryPersonnel(personnelId, personnelData) {
 export async function deleteMilitaryPersonnel(personnelId) {
     try {
         const response = await apiClient.delete(`${API_URL}/${personnelId}`);
-        return response.data; // Або response.status
+        return response.data;
     } catch (error) {
         console.error(`Error deleting military personnel with id ${personnelId}:`, error);
         throw error;

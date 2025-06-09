@@ -1,14 +1,13 @@
-// frontend/src/src/scenes/military_personnel/MilitaryPersonnelListPage.jsx
-import React, { useEffect } from 'react';
-import { Box, useTheme, CircularProgress, Typography } from "@mui/material";
-import { observer } from "mobx-react-lite";
+import React, {useEffect} from 'react';
+import {Box, CircularProgress, Typography, useTheme} from "@mui/material";
+import {observer} from "mobx-react-lite";
 import Header from "../../components/Header.jsx";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid.jsx";
 import TopBar from "../global/TopBar.jsx";
-import militaryPersonnelStore from "../../stores/militaryPersonnelStore"; // Розкоментовано
-import unitStore from "../../stores/unitStore.js"; // Розкоментовано (для назв підрозділів)
-import useError from "../../utils/useError.js"; // Розкоментовано
-import dayjs from 'dayjs'; // Для форматування дати
+import militaryPersonnelStore from "../../stores/militaryPersonnelStore";
+import unitStore from "../../stores/unitStore.js";
+import useError from "../../utils/useError.js";
+import dayjs from 'dayjs';
 
 const MilitaryPersonnelListPage = () => {
     const theme = useTheme();
@@ -23,11 +22,11 @@ const MilitaryPersonnelListPage = () => {
             headerName: 'Дата народження',
             flex: 1,
             type: 'date',
-            valueGetter: (value) => value ? new Date(value) : null, // Для сортування та фільтрації MUI DataGrid
+            valueGetter: (value) => value ? new Date(value) : null,
             renderCell: (params) => params.value ? dayjs(params.value).format('DD.MM.YYYY') : '',
         },
         {
-            field: 'unit_id', // Переконайтесь, що це поле називається саме так у вашій моделі MilitaryPersonnel на бекенді
+            field: 'unit_id',
             headerName: 'Підрозділ',
             flex: 1.5,
             renderCell: (params) => {
@@ -42,7 +41,6 @@ const MilitaryPersonnelListPage = () => {
         if (militaryPersonnelStore.personnelList.length === 0 && !militaryPersonnelStore.loading) {
             militaryPersonnelStore.loadPersonnel();
         }
-        // unitStore вже завантажується в militaryPersonnelStore.loadPersonnel, але можна перевірити окремо
         if (unitStore.units.length === 0 && !unitStore.loading) {
             unitStore.loadUnits();
         }

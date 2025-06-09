@@ -13,8 +13,6 @@ import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import GradeIcon from '@mui/icons-material/Grade';
 
 import {authStore} from "../../stores/authStore.js";
-
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 
 const TopBar = ({headerBox}) => {

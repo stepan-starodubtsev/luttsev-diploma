@@ -1,6 +1,6 @@
 const MilitaryPersonnel = require('../models/militaryPersonnel.model');
 const AppError = require("../errors/AppError");
-const sequelize = require('../config/settingsDB'); // Для транзакцій
+const sequelize = require('../config/settingsDB');
 const standardAssessmentService = require('./standardAssessmentService');
 
 module.exports = {

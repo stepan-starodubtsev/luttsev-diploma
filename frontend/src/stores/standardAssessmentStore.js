@@ -1,4 +1,3 @@
-// frontend/src/src/stores/standardAssessmentStore.js
 import { makeAutoObservable, runInAction, flow } from 'mobx';
 import {
     getStandardAssessments,
@@ -7,10 +6,6 @@ import {
     updateStandardAssessment,
     deleteStandardAssessment
 } from '../services/standardAssessmentService.js';
-// Можливо, знадобляться інші стори для отримання контексту (наприклад, назв вправ, ПІБ)
-// import exerciseStore from "./exerciseStore";
-// import militaryPersonnelStore from "./militaryPersonnelStore";
-// import trainingSessionStore from "./trainingSessionStore";
 
 
 class StandardAssessmentStore {
@@ -33,16 +28,6 @@ class StandardAssessmentStore {
         this.loading = true;
         this.error = null;
         try {
-            // Тут можна додати завантаження пов'язаних даних, якщо потрібно для відображення
-            // if (exerciseStore.exercises.length === 0 && !exerciseStore.loading) {
-            //     yield exerciseStore.loadExercises();
-            // }
-            // if (militaryPersonnelStore.personnelList.length === 0 && !militaryPersonnelStore.loading) {
-            //     yield militaryPersonnelStore.loadPersonnel();
-            // }
-            // if (trainingSessionStore.sessions.length === 0 && !trainingSessionStore.loading) {
-            //     yield trainingSessionStore.loadSessions();
-            // }
 
             const data = yield getStandardAssessments(filters);
             runInAction(() => {

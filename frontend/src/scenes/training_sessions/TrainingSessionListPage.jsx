@@ -1,23 +1,22 @@
-// frontend/src/src/scenes/training_sessions/TrainingSessionListPage.jsx
-import React, { useEffect } from 'react';
-import { Box, useTheme, CircularProgress, Typography } from "@mui/material";
-import { observer } from "mobx-react-lite";
+import React, {useEffect} from 'react';
+import {Box, useTheme, CircularProgress, Typography} from "@mui/material";
+import {observer} from "mobx-react-lite";
 import Header from "../../components/Header.jsx";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid.jsx";
 import TopBar from "../global/TopBar.jsx";
 import dayjs from 'dayjs';
-import trainingSessionStore from "../../stores/trainingSessionStore"; // Розкоментовано
-import userStore from "../../stores/userStore.js"; // Розкоментовано
-import unitStore from "../../stores/unitStore.js"; // Розкоментовано
-import locationStore from "../../stores/locationStore"; // Розкоментовано
-import useError from "../../utils/useError.js"; // Розкоментовано
-import { SessionTypes } from "../../utils/constants.js"; // Переконайтесь, що ця константа є
+import trainingSessionStore from "../../stores/trainingSessionStore";
+import userStore from "../../stores/userStore.js";
+import unitStore from "../../stores/unitStore.js";
+import locationStore from "../../stores/locationStore";
+import useError from "../../utils/useError.js";
+import {SessionTypes} from "../../utils/constants.js";
 
 const TrainingSessionListPage = () => {
     const theme = useTheme();
 
     const columns = [
-        { field: 'session_id', headerName: 'ID', width: 90 },
+        {field: 'session_id', headerName: 'ID', width: 90},
         {
             field: 'session_type',
             headerName: 'Тип заняття',
@@ -64,14 +63,12 @@ const TrainingSessionListPage = () => {
                 return unit ? unit.unit_name : `Unit ID: ${params.value}`;
             }
         },
-        // Можна додати стовпець для відображення вправ, наприклад, через Tooltip або розширення рядка
         {
             field: 'exercises',
             headerName: 'Вправи',
             flex: 2,
             sortable: false,
             renderCell: (params) => {
-                // `params.row.exercises` має бути масивом об'єктів вправ, якщо він завантажений з include
                 const exercises = params.row.exercises || [];
                 const exerciseNames = exercises.map(ex => ex.exercise_name || `ID: ${ex.exercise_id}`).join(', ');
                 return (
@@ -98,18 +95,18 @@ const TrainingSessionListPage = () => {
 
     if (isLoading && trainingSessionStore.sessions.length === 0) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-                <CircularProgress />
-                <Typography sx={{ ml: 2 }}>Завантаження занять...</Typography>
+            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
+                <CircularProgress/>
+                <Typography sx={{ml: 2}}>Завантаження занять...</Typography>
             </Box>
         );
     }
 
     return (
-        <Box sx={{ m: "20px" }}>
+        <Box sx={{m: "20px"}}>
             <TopBar headerBox={
-                <Header title={"Тренувальні Заняття"} subtitle={"Керування плановими та фактичними заняттями"} />
-            } />
+                <Header title={"Тренувальні Заняття"} subtitle={"Керування плановими та фактичними заняттями"}/>
+            }/>
             <Box>
                 <CustomDataGrid
                     columns={columns}

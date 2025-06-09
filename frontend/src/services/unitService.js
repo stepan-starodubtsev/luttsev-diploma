@@ -1,7 +1,6 @@
-// frontend/src/src/services/unitService.js
-import apiClient from "../utils/apiClient.js"; //
+import apiClient from "../utils/apiClient.js";
 
-const API_URL = '/api/units'; // Ендпоінт на бекенді для нових підрозділів
+const API_URL = '/api/units';
 
 export async function getUnits() {
     try {
@@ -46,7 +45,7 @@ export async function updateUnit(unitId, unitData) {
 export async function deleteUnit(unitId) {
     try {
         const response = await apiClient.delete(`${API_URL}/${unitId}`);
-        return response.data; // Або response.status
+        return response.data;
     } catch (error) {
         console.error(`Error deleting unit with id ${unitId}:`, error);
         throw error;

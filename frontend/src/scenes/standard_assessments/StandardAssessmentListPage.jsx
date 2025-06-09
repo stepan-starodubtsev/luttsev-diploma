@@ -1,4 +1,3 @@
-// frontend/src/src/scenes/standard_assessments/StandardAssessmentListPage.jsx
 import React, {useEffect} from 'react';
 import {Box, useTheme, CircularProgress, Typography} from "@mui/material";
 import {observer} from "mobx-react-lite";
@@ -7,10 +6,10 @@ import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid.jsx";
 import TopBar from "../global/TopBar.jsx";
 import standardAssessmentStore from "../../stores/standardAssessmentStore";
 import trainingSessionStore from "../../stores/trainingSessionStore";
-import militaryPersonnelStore from "../../stores/militaryPersonnelStore"; // Розкоментовано
-import exerciseStore from "../../stores/exerciseStore"; // Розкоментовано
-import useError from "../../utils/useError.js"; // Розкоментовано
-import {ScoreTypes} from "../../utils/constants.js"; // Розкоментовано та переконайтесь, що він є
+import militaryPersonnelStore from "../../stores/militaryPersonnelStore";
+import exerciseStore from "../../stores/exerciseStore";
+import useError from "../../utils/useError.js";
+import {ScoreTypes} from "../../utils/constants.js";
 import dayjs from 'dayjs';
 
 const StandardAssessmentListPage = () => {
@@ -51,7 +50,7 @@ const StandardAssessmentListPage = () => {
             flex: 0.7,
             type: 'singleSelect',
             valueOptions: ScoreTypes,
-            valueGetter: (value) => { // valueGetter для MUI DataGrid отримує значення поля, а не params
+            valueGetter: (value) => {
                 const scoreType = ScoreTypes.find(st => st.value === value);
                 return scoreType ? scoreType.label : value;
             }
@@ -71,7 +70,6 @@ const StandardAssessmentListPage = () => {
         if (standardAssessmentStore.assessments.length === 0 && !standardAssessmentStore.loading) {
             standardAssessmentStore.loadAssessments();
         }
-        // Завантаження пов'язаних даних для відображення імен замість ID
         if (trainingSessionStore.sessions.length === 0 && !trainingSessionStore.loading) trainingSessionStore.loadSessions();
         if (militaryPersonnelStore.personnelList.length === 0 && !militaryPersonnelStore.loading) militaryPersonnelStore.loadPersonnel();
         if (exerciseStore.exercises.length === 0 && !exerciseStore.loading) exerciseStore.loadExercises();
@@ -105,7 +103,7 @@ const StandardAssessmentListPage = () => {
                     addEntityUrl={"/standard-assessments/create"}
                     editEntityUrl={"/standard-assessments/edit"}
                     deleteHandler={standardAssessmentStore.removeAssessment.bind(standardAssessmentStore)}
-                    getRowId={(row)=> row.assessment_id}
+                    getRowId={(row) => row.assessment_id}
                 />
             </Box>
         </Box>

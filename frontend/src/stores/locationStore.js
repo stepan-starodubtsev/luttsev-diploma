@@ -1,4 +1,3 @@
-// frontend/src/src/stores/locationStore.js
 import { makeAutoObservable, runInAction, flow } from 'mobx';
 import {
     getLocations,

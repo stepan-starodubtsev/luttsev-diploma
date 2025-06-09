@@ -11,7 +11,7 @@ export function autoWidthColumns(columns, font = '14px Source Code Pro') {
 
         return {
             ...col,
-            flex: col.flex ?? undefined, // зберігаємо flex, якщо хочеш
+            flex: col.flex ?? undefined,
             width: col.flex ? undefined : autoWidth,
         };
     });

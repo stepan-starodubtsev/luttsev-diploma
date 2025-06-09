@@ -1,10 +1,9 @@
-// frontend/src/src/components/Charts/analytics/WeeklyTrainingSessionsStat.jsx
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Typography, useTheme } from '@mui/material';
 import StatBox from '../StatBox/StatBox.jsx';
 import EventIcon from '@mui/icons-material/Event';
-import trainingSessionStore from '../../../stores/trainingSessionStore'; // Новий стор
+import trainingSessionStore from '../../../stores/trainingSessionStore';
 import { tokens } from "../../../theme.js";
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -29,7 +28,7 @@ const WeeklyTrainingSessionsStat = observer(() => {
     const endOfWeek = today.endOf('week');
 
     const sessionsThisWeek = trainingSessionStore.sessions.filter(session =>
-        dayjs(session.start_datetime).isBetween(startOfWeek, endOfWeek, null, '[]') // '[]' включає початок і кінець
+        dayjs(session.start_datetime).isBetween(startOfWeek, endOfWeek, null, '[]')
     ).length;
 
     return (
