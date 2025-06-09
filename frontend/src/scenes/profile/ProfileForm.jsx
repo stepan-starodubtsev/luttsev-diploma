@@ -81,7 +81,7 @@ const ProfileForm = () => {
         }
 
         try {
-            await userStore.updateUser(authStore.user.user_id, dataToUpdate);
+            await authStore.updateUser(dataToUpdate);
             alert('Профіль успішно оновлено!');
         } catch (error) {
             setFormError(userStore.error || "Помилка оновлення профілю");

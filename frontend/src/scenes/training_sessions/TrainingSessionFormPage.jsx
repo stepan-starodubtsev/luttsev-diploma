@@ -186,7 +186,7 @@ const TrainingSessionFormPage =() => {
 
         try {
             if (sessionId) {
-                await trainingSessionStore.updateSession(parseInt(sessionId), dataToSubmit);
+                await trainingSessionStore.updateSession(sessionId, dataToSubmit);
             } else {
                 const newSession = await trainingSessionStore.addSession(dataToSubmit);
                 // Якщо це нова сесія типу "Здача нормативів", можна одразу перенаправити на сторінку оцінок

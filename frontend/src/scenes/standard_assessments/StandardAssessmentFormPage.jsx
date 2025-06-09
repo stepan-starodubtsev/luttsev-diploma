@@ -107,7 +107,7 @@ const StandardAssessmentFormPage = () => {
 
         try {
             if (assessmentId) {
-                await standardAssessmentStore.updateAssessment(parseInt(assessmentId), dataToSubmit);
+                await standardAssessmentStore.updateAssessment(assessmentId, dataToSubmit);
             } else {
                 await standardAssessmentStore.addAssessment(dataToSubmit);
             }

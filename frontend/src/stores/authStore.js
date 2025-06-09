@@ -160,6 +160,7 @@
 import {action, computed, flow, makeObservable, observable, runInAction} from 'mobx';
 import apiClient, {configureApiClientAuth} from "../utils/apiClient.js";
 import {jwtDecode} from 'jwt-decode';
+import * as userService from "../services/userService.js";
 // import maintenancesStore from "./maintenancesStore.js";
 // import repairs from "../scenes/military_personnel/MilitaryPersonnelListPage.jsx";
 // import repairsStore from "./repairsStore.js";
@@ -185,6 +186,7 @@ class AuthStore {
             login: flow,
             logout: action.bound,
             validateTokenOnServer: flow,
+            updateUser: flow,
             _setAuthDataFromToken: action,
             clearAuthData: action.bound,
             loadAuthDataFromStorage: action.bound,
@@ -326,6 +328,37 @@ class AuthStore {
             if (error.response?.status !== 401) {
                 this.clearAuthData();
             }
+        }
+    }
+
+    *updateUser(userDataToUpdate) {
+        if (!this.isAuthenticated || !this.user?.user_id) {
+            this.error = "Користувач не автентифікований. Неможливо оновити профіль.";
+            throw new Error(this.error);
+        }
+
+        this.loading = true;
+        this.error = null;
+
+        try {
+            // Викликаємо сервіс для оновлення даних на бекенді
+            const updatedUser = yield userService.updateUser(this.user.user_id, userDataToUpdate);
+
+            // Оновлюємо стан локально і в localStorage
+            runInAction(() => {
+                this.user = updatedUser;
+                localStorage.setItem("user", JSON.stringify(this.user));
+            });
+            return updatedUser;
+        } catch (error) {
+            runInAction(() => {
+                this.error = error.response?.data?.message || "Помилка оновлення профілю";
+            });
+            throw error; // Перекидаємо помилку, щоб компонент міг її обробити
+        } finally {
+            runInAction(() => {
+                this.loading = false;
+            });
         }
     }
 

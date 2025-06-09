@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import Header from "../../components/Header.jsx";
 import TopBar from "../global/TopBar.jsx";
+import useError from "../../utils/useError.js";
+import locationStore from "../../stores/locationStore.js";
 // import locationStore from "../../stores/locationStore";
 // import useError from "../../utils/useError.js";
 
@@ -16,24 +18,23 @@ const LocationFormPage = () => {
     const [location, setLocation] = useState({
         name: '',
         description: '',
-        // capacity: '', // Якщо будете додавати це поле
     });
     const [formError, setFormError] = useState('');
 
-    // useEffect(() => {
-    //     if (locationId) {
-    //         const existingLocation = locationStore.locations.find(loc => loc.location_id === parseInt(locationId));
-    //         if (existingLocation) {
-    //             setLocation(existingLocation);
-    //         } else {
-    //             // locationStore.loadLocationById(locationId).then(data => setLocation(data));
-    //         }
-    //     } else {
-    //         setLocation({ name: '', description: '' /*, capacity: ''*/ });
-    //     }
-    // }, [locationId]);
+    useEffect(() => {
+        if (locationId) {
+            const existingLocation = locationStore.locations.find(loc => loc.location_id === parseInt(locationId));
+            if (existingLocation) {
+                setLocation(existingLocation);
+            } else {
+                locationStore.loadLocationById(locationId).then(data => setLocation(data));
+            }
+        } else {
+            setLocation({ name: '', description: '' /*, capacity: ''*/ });
+        }
+    }, [locationId]);
 
-    // useError(locationStore);
+    useError(locationStore);
 
     const handleChange = (e) => {
         setLocation({ ...location, [e.target.name]: e.target.value });
@@ -44,10 +45,6 @@ const LocationFormPage = () => {
             setFormError("Назва локації є обов'язковою.");
             return false;
         }
-        // if (location.capacity && (isNaN(location.capacity) || parseInt(location.capacity) < 0)) {
-        //     setFormError("Місткість має бути позитивним числом.");
-        //     return false;
-        // }
         setFormError('');
         return true;
     };
@@ -57,18 +54,16 @@ const LocationFormPage = () => {
         if (!validateForm()) {
             return;
         }
-        // try {
-        //     if (locationId) {
-        //         await locationStore.updateLocation(parseInt(locationId), location);
-        //     } else {
-        //         await locationStore.addLocation(location);
-        //     }
-        //     navigate('/locations');
-        // } catch (error) {
-        //     setFormError(error.message || "Помилка збереження локації");
-        // }
-        console.log("Форма локації відправлена (заглушка):", location); // Тимчасово
-        navigate('/locations'); // Тимчасово
+        try {
+            if (locationId) {
+                await locationStore.updateLocation(locationId, location);
+            } else {
+                await locationStore.addLocation(location);
+            }
+            navigate('/locations');
+        } catch (error) {
+            setFormError(error.message || "Помилка збереження локації");
+        }
     };
 
     return (
@@ -97,7 +92,7 @@ const LocationFormPage = () => {
                         value={location.description}
                         onChange={handleChange}
                         fullWidth
-                        
+
                         rows={4}
                     />
                     {formError && !formError.includes("Назва") && <Typography color="error">{formError}</Typography>}

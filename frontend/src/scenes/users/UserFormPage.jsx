@@ -36,7 +36,7 @@ const UserFormPage = () => {
         }
         if (userId) {
             setIsLoading(true);
-            userStore.loadUserById(parseInt(userId)).then((data) => {
+            userStore.loadUserById(userId).then((data) => {
                 if (data) {
                     setUser({ ...data, password: '' }); // Пароль не завантажуємо для редагування
                 } else {
@@ -103,7 +103,7 @@ const UserFormPage = () => {
 
         try {
             if (userId) {
-                await userStore.updateUser(parseInt(userId), dataToSubmit);
+                await userStore.updateUser(userId, dataToSubmit);
             } else {
                 await userStore.addUser(dataToSubmit);
             }

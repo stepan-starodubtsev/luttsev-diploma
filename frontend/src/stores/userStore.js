@@ -103,6 +103,9 @@ class UserStore {
         try {
             const updated = yield updateUser(userId, userData);
             runInAction(() => {
+                if(this.users.length === 0){
+                    this.loadUsers();
+                }
                 const index = this.users.findIndex(u => u.user_id === userId); // Використовуємо user_id
                 if (index !== -1) {
                     this.users[index] = updated;

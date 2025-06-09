@@ -93,7 +93,7 @@ const MilitaryPersonnelFormPage = () => {
 
         try {
             if (personnelId) {
-                await militaryPersonnelStore.updatePersonnel(parseInt(personnelId), dataToSubmit);
+                await militaryPersonnelStore.updatePersonnel(personnelId, dataToSubmit);
             } else {
                 await militaryPersonnelStore.addPersonnel(dataToSubmit);
             }

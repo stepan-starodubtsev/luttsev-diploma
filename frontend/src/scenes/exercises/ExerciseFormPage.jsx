@@ -68,7 +68,7 @@ const ExerciseFormPage = () => {
         setFormError('');
         try {
             if (exerciseId) {
-                await exerciseStore.updateExercise(parseInt(exerciseId), exercise);
+                await exerciseStore.updateExercise(exerciseId, exercise);
             } else {
                 await exerciseStore.addExercise(exercise);
             }

@@ -161,7 +161,7 @@ const CalendarPage = observer(() => {
     const handleDeleteEvent = async () => {
         if (selectedEvent && window.confirm(`Ви впевнені, що хочете видалити заняття: ${selectedEvent.title}?`)) {
             setIsLoading(true); // Можна використати локальний isLoading для модалки
-            await trainingSessionStore.removeSession(parseInt(selectedEvent.id));
+            await trainingSessionStore.removeSession(selectedEvent.id);
             setIsLoading(false);
             handleModalClose();
         }

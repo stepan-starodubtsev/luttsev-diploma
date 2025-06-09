@@ -29,7 +29,7 @@ const CustomDataGrid = ({
 
     const handleConfirmDelete = () => {
         setOpen(false);
-        deleteHandler(parseInt(selectedRowId));
+        deleteHandler(selectedRowId[0]);
         setSelectedRowId(undefined);
     };
 
