@@ -9,7 +9,12 @@ module.exports = {
     },
 
     async getAllMilitaryPersonnel(filters = {}) {
-        const militaryPersonnel = await MilitaryPersonnel.findAll({ where: filters });
+        const militaryPersonnel = await MilitaryPersonnel.findAll({
+            where: filters,
+            order: [
+                ['military_person_id', 'ASC']
+            ]
+        });
         if (!militaryPersonnel || militaryPersonnel.length === 0) {
             return null;
         }

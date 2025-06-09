@@ -37,7 +37,10 @@ module.exports = {
                 model: sequelize.models.Exercise,
                 as: 'exercises',
                 through: { attributes: ['order_in_session'] }
-            }]
+            }],
+            order: [
+                ['session_id', 'ASC']
+            ]
         });
         if (!trainingSessions || trainingSessions.length === 0) {
             return null;

@@ -13,7 +13,11 @@ module.exports = {
     },
 
     async getAllLocations() {
-        const locations = await Location.findAll();
+        const locations = await Location.findAll({
+            order: [
+                ['location_id', 'ASC']
+            ]
+        });
         if (!locations || locations.length === 0) {
             return null;
         }

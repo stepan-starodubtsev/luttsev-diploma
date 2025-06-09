@@ -14,7 +14,11 @@ module.exports = {
     },
 
     async getAllExercises() {
-        const exercises = await Exercise.findAll();
+        const exercises = await Exercise.findAll({
+            order: [
+                ['exercise_id', 'ASC']
+            ]
+        });
         if (!exercises || exercises.length === 0) {
             return null;
         }

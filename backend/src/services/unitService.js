@@ -17,8 +17,9 @@ module.exports = {
 
     async getAllUnits() {
         const units = await Unit.findAll({
-            // Приклад: якщо ви хочете завантажити користувачів (командирів або членів) цього підрозділу
-            // include: [{ model: User, as: 'users' }] // 'users' - це аліас зі зв'язку в index.js
+            order: [
+                ['unit_id', 'ASC']
+            ]
         });
         if (!units || units.length === 0) {
             return null;

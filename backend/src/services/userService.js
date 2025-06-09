@@ -29,7 +29,10 @@ module.exports = {
     async getAllUsers(filters = {}) { // Додав filters
         const users = await User.findAll({
             where: filters, // Застосовуємо фільтри
-            attributes: { exclude: ['password_hash'] }
+            attributes: { exclude: ['password_hash'] },
+            order: [
+                ['user_id', 'ASC']
+            ]
         });
         if (!users || users.length === 0) {
             return null; // Або [] для узгодженості з фронтендом
