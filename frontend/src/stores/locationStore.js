@@ -94,11 +94,11 @@ class LocationStore {
         try {
             const updated = yield updateLocation(locationId, locationData);
             runInAction(() => {
-                const index = this.locations.findIndex(loc => loc.location_id === parseInt(locationId));
+                const index = this.locations.findIndex(loc => loc.location_id === locationId);
                 if (index !== -1) {
                     this.locations[index] = updated;
                 }
-                if (this.selectedLocation && this.selectedLocation.location_id === parseInt(locationId)) {
+                if (this.selectedLocation && this.selectedLocation.location_id === locationId) {
                     this.selectedLocation = updated;
                 }
             });
@@ -122,7 +122,7 @@ class LocationStore {
         const originalLocations = [...this.locations];
         try {
             runInAction(() => {
-                this.locations = this.locations.filter(loc => loc.location_id !== parseInt(locationId));
+                this.locations = this.locations.filter(loc => loc.location_id !== locationId);
             });
             yield deleteLocation(locationId);
         } catch (error) {

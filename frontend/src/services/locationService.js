@@ -5,6 +5,7 @@ const API_URL = '/api/locations'; // Припускаємо, що такий е�
 
 export async function getLocations() {
     try {
+        console.log("AccessToken: ", localStorage.getItem("accessToken"));
         const response = await apiClient.get(API_URL);
         return response.data;
     } catch (error) {

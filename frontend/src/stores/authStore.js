@@ -313,7 +313,7 @@ class AuthStore {
         }
         console.log("AuthStore: Validating token on server...");
         try {
-            const response = yield apiClient.get("/auth/me");
+            const response = yield apiClient.get("api/auth/me");
             const userDataFromServer = response.data;
 
             runInAction(() => {

@@ -100,11 +100,11 @@ class MilitaryPersonnelStore {
         try {
             const updated = yield updateMilitaryPersonnel(personnelId, personnelData);
             runInAction(() => {
-                const index = this.personnelList.findIndex(p => p.military_person_id === parseInt(personnelId));
+                const index = this.personnelList.findIndex(p => p.military_person_id === personnelId);
                 if (index !== -1) {
                     this.personnelList[index] = updated;
                 }
-                if (this.selectedPersonnel && this.selectedPersonnel.military_person_id === parseInt(personnelId)) {
+                if (this.selectedPersonnel && this.selectedPersonnel.military_person_id === personnelId) {
                     this.selectedPersonnel = updated;
                 }
             });
@@ -128,7 +128,7 @@ class MilitaryPersonnelStore {
         const originalPersonnelList = [...this.personnelList];
         try {
             runInAction(() => {
-                this.personnelList = this.personnelList.filter(p => p.military_person_id !== parseInt(personnelId));
+                this.personnelList = this.personnelList.filter(p => p.military_person_id !== personnelId);
             });
             yield deleteMilitaryPersonnel(personnelId);
         } catch (error) {

@@ -110,11 +110,11 @@ class StandardAssessmentStore {
         try {
             const updated = yield updateStandardAssessment(assessmentId, assessmentData);
             runInAction(() => {
-                const index = this.assessments.findIndex(sa => sa.assessment_id === parseInt(assessmentId));
+                const index = this.assessments.findIndex(sa => sa.assessment_id === assessmentId);
                 if (index !== -1) {
                     this.assessments[index] = updated;
                 }
-                if (this.selectedAssessment && this.selectedAssessment.assessment_id === parseInt(assessmentId)) {
+                if (this.selectedAssessment && this.selectedAssessment.assessment_id === assessmentId) {
                     this.selectedAssessment = updated;
                 }
             });
@@ -138,7 +138,7 @@ class StandardAssessmentStore {
         const originalAssessments = [...this.assessments];
         try {
             runInAction(() => {
-                this.assessments = this.assessments.filter(sa => sa.assessment_id !== parseInt(assessmentId));
+                this.assessments = this.assessments.filter(sa => sa.assessment_id !== assessmentId);
             });
             yield deleteStandardAssessment(assessmentId);
         } catch (error) {

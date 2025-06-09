@@ -22,10 +22,10 @@ import TrainingSessionFormPage from "./scenes/training_sessions/TrainingSessionF
 import CalendarPage from "./scenes/calendar";
 
 import ProfileForm from "./scenes/profile/ProfileForm.jsx";
-import LoginPage from './scenes/LoginPage/LoginPage.jsx';
+import LoginPage from './scenes/login_page/LoginPage.jsx';
 import ProtectedRoute from './components/auth/ProtectedRoute/ProtectedRoute.jsx';
-import NotFoundPage from "./scenes/NotFoundPage/NotFoundPage.jsx";
-import AccessDeniedPage from "./scenes/AccessDeniedPage/AccessDeniedPage.jsx";
+import NotFoundPage from "./scenes/not_found_page/NotFoundPage.jsx";
+import AccessDeniedPage from "./scenes/access_denied_page/AccessDeniedPage.jsx";
 import SessionAssessmentsPage from "./scenes/training_sessions/SessionAssessmentsPage.jsx";
 import StandardAssessmentListPage from "./scenes/standard_assessments/StandardAssessmentListPage.jsx";
 import StandardAssessmentFormPage from "./scenes/standard_assessments/StandardAssessmentFormPage.jsx";

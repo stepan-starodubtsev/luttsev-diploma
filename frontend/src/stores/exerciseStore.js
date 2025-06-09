@@ -94,11 +94,11 @@ class ExerciseStore {
         try {
             const updated = yield updateExercise(exerciseId, exerciseData);
             runInAction(() => {
-                const index = this.exercises.findIndex(ex => ex.exercise_id === parseInt(exerciseId));
+                const index = this.exercises.findIndex(ex => ex.exercise_id === exerciseId);
                 if (index !== -1) {
                     this.exercises[index] = updated;
                 }
-                if (this.selectedExercise && this.selectedExercise.exercise_id === parseInt(exerciseId)) {
+                if (this.selectedExercise && this.selectedExercise.exercise_id === exerciseId) {
                     this.selectedExercise = updated;
                 }
             });
@@ -123,7 +123,7 @@ class ExerciseStore {
         try {
             // Оптимістичне видалення
             runInAction(() => {
-                this.exercises = this.exercises.filter(ex => ex.exercise_id !== parseInt(exerciseId));
+                this.exercises = this.exercises.filter(ex => ex.exercise_id !== exerciseId);
             });
             yield deleteExercise(exerciseId);
         } catch (error) {

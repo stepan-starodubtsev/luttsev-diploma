@@ -87,7 +87,6 @@ const TrainingSessionListPage = () => {
         if (trainingSessionStore.sessions.length === 0 && !trainingSessionStore.loading) {
             trainingSessionStore.loadSessions();
         }
-        // Залежності для renderCell вже завантажуються в trainingSessionStore.loadSessions
     }, []);
 
     useError(trainingSessionStore);
@@ -114,7 +113,7 @@ const TrainingSessionListPage = () => {
             <Box>
                 <CustomDataGrid
                     columns={columns}
-                    rows={trainingSessionStore.sessions.slice()}
+                    rows={trainingSessionStore.sessions}
                     loading={isLoading}
                     addEntityUrl={"/training-sessions/create"}
                     editEntityUrl={"/training-sessions/edit"}

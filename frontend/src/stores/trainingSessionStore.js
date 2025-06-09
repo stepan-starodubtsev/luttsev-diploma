@@ -127,11 +127,11 @@ class TrainingSessionStore {
         try {
             const updated = yield updateTrainingSession(sessionId, sessionData);
             runInAction(() => {
-                const index = this.sessions.findIndex(s => s.session_id === parseInt(sessionId));
+                const index = this.sessions.findIndex(s => s.session_id === sessionId);
                 if (index !== -1) {
                     this.sessions[index] = updated;
                 }
-                if (this.selectedSession && this.selectedSession.session_id === parseInt(sessionId)) {
+                if (this.selectedSession && this.selectedSession.session_id === sessionId) {
                     this.selectedSession = updated;
                 }
             });
@@ -155,7 +155,7 @@ class TrainingSessionStore {
         const originalSessions = [...this.sessions];
         try {
             runInAction(() => {
-                this.sessions = this.sessions.filter(s => s.session_id !== parseInt(sessionId));
+                this.sessions = this.sessions.filter(s => s.session_id !== sessionId);
             });
             yield deleteTrainingSession(sessionId);
         } catch (error) {

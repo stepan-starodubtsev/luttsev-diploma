@@ -35,10 +35,10 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
     try {
-        if (!req.user || !req.user.user || !req.user.user.id) {
+        if (!req.user || !req.user.user || !req.user.user.user_id) {
             return res.status(400).json({ message: 'User ID not found in token payload' });
         }
-        const userId = req.user.user.id;
+        const userId = req.user.user.user_id;
         const user = await User.findByPk(userId);
 
         if (!user) {

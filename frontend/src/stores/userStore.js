@@ -103,11 +103,11 @@ class UserStore {
         try {
             const updated = yield updateUser(userId, userData);
             runInAction(() => {
-                const index = this.users.findIndex(u => u.user_id === parseInt(userId)); // Використовуємо user_id
+                const index = this.users.findIndex(u => u.user_id === userId); // Використовуємо user_id
                 if (index !== -1) {
                     this.users[index] = updated;
                 }
-                if (this.selectedUser && this.selectedUser.user_id === parseInt(userId)) {
+                if (this.selectedUser && this.selectedUser.user_id === userId) {
                     this.selectedUser = updated;
                 }
             });
@@ -131,7 +131,7 @@ class UserStore {
         const originalUsers = [...this.users];
         try {
             runInAction(() => {
-                this.users = this.users.filter(u => u.user_id !== parseInt(userId)); // Використовуємо user_id
+                this.users = this.users.filter(u => u.user_id !== userId); // Використовуємо user_id
             });
             yield deleteUser(userId);
         } catch (error) {

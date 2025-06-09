@@ -3,7 +3,7 @@ import {Navigate, Outlet, useLocation} from 'react-router-dom';
 import {observer} from 'mobx-react-lite';
 import authStore from '../../../stores/authStore';
 import {Box, CircularProgress, Typography} from '@mui/material';
-import AccessDeniedPage from "../../../scenes/AccessDeniedPage/AccessDeniedPage.jsx";
+import AccessDeniedPage from "../../../scenes/access_denied_page/AccessDeniedPage.jsx";
 
 const ProtectedRoute = observer(({ allowedRoles }) => {
     const location = useLocation();
